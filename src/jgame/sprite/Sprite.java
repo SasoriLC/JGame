@@ -3,8 +3,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+
 import javax.imageio.ImageIO;
 
+import jgame.Audio;
 import jgame.exceptions.SpriteSequenceInvalid;
 
 /**
@@ -41,6 +43,7 @@ public class Sprite{
 			for(int i = 0; i < sprite.length; i++)
 				sprite[i] = image.getSubimage(i * spriteWidth, 0
 						,spriteWidth , spriteHeight); 
+			setSequence(0,1,1);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -85,6 +88,21 @@ public class Sprite{
 		}catch(SpriteSequenceInvalid e){
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 
+	 * @param start the start of the sprite animation
+	 * @param end the end of the sprite animation
+	 * @param a the audio to be played during the animation of the sequence
+	 * <p>
+	 * start is inclusive and end is exclusive
+	 * @ensures sequence != null
+	 * @since 1.0 
+	 */
+	public void setSequence(int start, int end,long time, Audio a){
+		animation.setAnimationAudio(a);
+		this.setSequence(start, end, time);
 	}
 
 	

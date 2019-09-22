@@ -1,8 +1,6 @@
-package jgame;
-
+package jgame.listeners.keyboard;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
 /**
@@ -11,7 +9,7 @@ import jgame.entity.GameObject;
  * @since 1.0
  * @see jgame.Window and jgame.Keyboard
  */
-class KeyboardWrapper implements KeyListener{
+class DefaultKeyListener implements KeyListener{
 	private Keyboard keyboard;
 	
 	/**
@@ -19,7 +17,7 @@ class KeyboardWrapper implements KeyListener{
 	 * @param k - the keyboard
 	 * @since 1.0
 	 */
-	public KeyboardWrapper(Keyboard k){
+	public DefaultKeyListener(Keyboard k){
 		keyboard = k;
 	}
 	

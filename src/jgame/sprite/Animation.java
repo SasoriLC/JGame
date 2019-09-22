@@ -2,6 +2,8 @@ package jgame.sprite;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import jgame.Audio;
 /**
  * This class is responsible for changing the indexes of the sprite's sequence 
  * in order to make it an animation
@@ -15,6 +17,7 @@ public class Animation {
 	private int currentIndex = 0;
 	private int maxIndex;
 	private boolean isRunning;
+	private Audio audio;
 	
 	
 	/**
@@ -77,15 +80,27 @@ public class Animation {
 		timerTask = new TimerTask(){
 			@Override
 			public void run(){
+				if(audio != null)
+					audio.play();
 				currentIndex++;
 				if(currentIndex == maxIndex){
 					currentIndex = 0;
 					isRunning = false;
+					if(audio != null)
+						audio.stop();
 					timerTask.cancel();
 				}
 
 			}
 		};
+	}
+	
+	/**
+	 * Sets an audio to be played alongside with the animation
+	 * @param audio The audio
+	 */
+	public final void setAnimationAudio(Audio audio){
+		this.audio = audio;
 	}
 	
 }

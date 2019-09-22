@@ -1,5 +1,6 @@
 package jgame.structures;
 
+import jgame.entity.GameObject;
 import jgame.structures.timer.Timer;
 
 /**
@@ -11,6 +12,7 @@ import jgame.structures.timer.Timer;
 public class Vector2 {
 	public float x;
 	public float y;
+	private Timer currentTimer;
 	
 	/**
 	 * 
@@ -39,12 +41,16 @@ public class Vector2 {
 		float moveY = Math.abs(y - newY) / timer.getTimeLeft();
 		moveY = newY > y ? moveY : -moveY;
 		final float incY = moveY;
-		Timer newT = new Timer(timer.getTimeLeft() + 2){
+		if(currentTimer != null)
+			currentTimer.stop();
+		
+		currentTimer = new Timer(timer.getTimeLeft() + 2){
 			@Override
 			public void task() {
 				timer.task();
 				x+=incX;
 				y+=incY;
+				System.out.println("X: " + x +  "\nY: " + y);
 			}
 
 			@Override
@@ -52,7 +58,7 @@ public class Vector2 {
 				timer.onTimerEnd();
 			}
 		};
-		newT.start();
+		currentTimer.start();
 	}
 	
 	/**

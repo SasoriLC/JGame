@@ -60,14 +60,18 @@ abstract class Ticker{
 			public void run(){
 				milliseconds--;
 				if(isTaskOver()){ //end of the timer
-					task.cancel();
-					timer.cancel();
-					onTimerEnd();
+					stop();
 					return;
 				}
 				task();
 			}
 		};
+	}
+	
+	public void stop(){
+		task.cancel();
+		timer.cancel();
+		onTimerEnd();
 	}
 	
 	/**

@@ -3,8 +3,9 @@ package jgame;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.PointerInfo;
-
 import javax.swing.JFrame;
+import jgame.listeners.Mouse;
+import jgame.listeners.keyboard.Keyboard;
 
 /**
  * 
@@ -16,7 +17,7 @@ import javax.swing.JFrame;
  */
 @SuppressWarnings("serial")
 public class Window extends JFrame{
-	private static Window instance;
+	private static Window INSTANCE;
 
 	private Scene scene;
 	//private BufferStrategy buffer;
@@ -29,7 +30,7 @@ public class Window extends JFrame{
 	 * @param height the height of the window
 	 * @since 1.0
 	 */
-	public Window(Scene scene, int width, int height){
+	private Window(Scene scene, int width, int height){
 		super();
 		this.scene = scene;
 		setUndecorated(true);
@@ -42,8 +43,18 @@ public class Window extends JFrame{
 //		createBufferStrategy(3);
 //		buffer = getBufferStrategy();
 //		graphics = buffer.getDrawGraphics();
-		
-		instance = this;
+	}
+	
+	/**
+	 * 
+	 * @param scene the scene
+	 * @param width the width of the window
+	 * @param height the height of the window
+	 * @since 1.0
+	 */
+	public static Window create(Scene scene, int width, int height){
+		INSTANCE = new Window(scene, width,height);
+		return INSTANCE;
 	}
 
 	/**
@@ -61,7 +72,7 @@ public class Window extends JFrame{
 	 * @since 1.0
 	 */
 	public static Window getInstance(){
-		return instance;
+		return INSTANCE;
 	}
 	
 	/**
@@ -72,7 +83,7 @@ public class Window extends JFrame{
 	public void setKeyboard(Keyboard keyboard){
 		if(this.getKeyListeners().length == 1) //remove the last keyboard 
 			this.removeKeyListener(this.getKeyListeners()[0]);
-		this.addKeyListener(new KeyboardWrapper(keyboard));		
+		this.addKeyListener(keyboard.getKeyListener());		
 	}
 	
 	/**
@@ -83,7 +94,7 @@ public class Window extends JFrame{
 	public void setMouse(Mouse mouse){
 		if(this.getMouseListeners().length == 1) //remove the last mouse
 			this.removeMouseListener(this.getMouseListeners()[0]);
-		this.addMouseListener(mouse.getListener());		
+		this.addMouseListener(mouse.getMouseListener());		
 	}
 	
 //	public void update(){

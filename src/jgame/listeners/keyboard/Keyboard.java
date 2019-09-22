@@ -1,11 +1,14 @@
-package jgame;
+package jgame.listeners.keyboard;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
+
+import jgame.Behavior;
 
 public class Keyboard {
 
 	private Map<Integer,Behavior> keyBehaviors = new HashMap<>();
-	
+	private KeyListener listener = new DefaultKeyListener(this);
 	
 	/**
 	 * 
@@ -27,6 +30,21 @@ public class Keyboard {
 	void executeBehavior(int keyCode){
 		if(keyBehaviors.get(keyCode) != null)
 			keyBehaviors.get(keyCode).run();
+	}
+	
+	
+	/**
+	 * @return the key listener
+	 */
+	public KeyListener getKeyListener() {
+		return listener;
+	}
+
+	/**
+	 * @param listener the key listener to set
+	 */
+	public void setKeyListener(KeyListener listener) {
+		this.listener = listener;
 	}
 	
 }

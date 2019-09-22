@@ -32,13 +32,28 @@ public class Camera extends Entity{
 	 * @param initialY the initial y position of the camera
 	 * @since 1.0
 	 */
-	public Camera(GameObject target, int width, int height,
+	private Camera(GameObject target, int width, int height,
 			int initialX, int initialY){
 		this.target = target;
 		this.width = width;
 		this.height = height;
 		position = new Vector2(initialX,initialY);
 		INSTANCE = this;
+	}
+	
+	/**
+	 * Creates an Instance of the camera object
+	 * @param target the target of the camera
+	 * @param width the width of the camera
+	 * @param height the height of the camera
+	 * @param initialX the initial x position of the camera
+	 * @param initialY the initial y position of the camera
+	 * @since 1.0
+	 */
+	public static Camera create(GameObject target, int width, int height,
+			int initialX, int initialY){
+		INSTANCE = new Camera(target,width,height,initialX,initialY);
+		return INSTANCE;
 	}
 	
 	/**

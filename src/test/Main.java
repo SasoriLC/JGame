@@ -5,15 +5,17 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import jgame.Audio;
 import jgame.GameObjectCollisionDetector;
-import jgame.Keyboard;
-import jgame.Mouse;
 import jgame.Scene;
 import jgame.Window;
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
+import jgame.listeners.Mouse;
+import jgame.listeners.keyboard.Keyboard;
 import jgame.sprite.LoopingSprite;
 import jgame.sprite.Sprite;
 import jgame.tile.Tile;
@@ -28,20 +30,22 @@ public class Main {
 	private static Window window;
 
 	private static GameObject player;
+	private static GameObject follower = new GameObject(new Sprite("Sprites/naercio.png",1),100,370);
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception{
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = 800;//gd.getDisplayMode().getWidth();
 		int height = 600;//gd.getDisplayMode().getHeight();
 
 		Sprite s = new Sprite(PLAYER,16);
 		player = new GameObject(s,700,500);
-		new Camera(player,width,height,0,0);
+		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
 
 		scene = new Scene(MAP);
 		scene.addGameObject(player); //me
 		player.addObserver(new GameObjectCollisionDetector());
+		//follower.addObserver(new GameObjectCollisionDetector());
 
 		//add collisions. Note that this only will work correctly in the following maps: cave and Collision test scene
 		ArrayList<ArrayList<Tile>> tiles = scene.getTiles();
@@ -54,36 +58,42 @@ public class Main {
 			}
 		}
 
-		//add more game objets
+		//add more game objects
 		addObjects();
 
 
-		window = new Window(scene,width,height);
+		window = Window.create(scene,width,height);
 
 		Keyboard k = new Keyboard();
 
+
+		Audio a = new Audio("Sounds/grass.mp3");
 		//create the keyboard behaviors
 		k.addBehavior(KeyEvent.VK_UP, () -> { 
 			player.moveY(-velocity);
-			player.getSprite().setSequence(12,16, time);
+			player.getSprite().setSequence(12,16, time,a);
+			follower.position.moveTowards(player.position, 1000);
+
 		});
 		k.addBehavior(KeyEvent.VK_DOWN,() -> {
 			player.moveY(velocity);
-			player.getSprite().setSequence(0, 4, time);
+			player.getSprite().setSequence(0, 4, time,a);
+			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addBehavior(KeyEvent.VK_LEFT, () -> {
 			player.moveX(-velocity);
-			player.getSprite().setSequence(4,8, time);
+			player.getSprite().setSequence(4,8, time,a);
+			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addBehavior(KeyEvent.VK_RIGHT, () -> {
 			player.moveX(velocity);
-			player.getSprite().setSequence(8,12, time);
+			player.getSprite().setSequence(8,12, time,a);
+			follower.position.moveTowards(player.position, 1000);
 		});
-
 		window.setKeyboard(k);
 
 		Mouse m = new Mouse();
-		m.setListener(new MouseListener(){
+		m.setMouseListener(new MouseListener(){
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -103,9 +113,12 @@ public class Main {
 			public void mouseReleased(MouseEvent e) {}
 
 		});
+		m.setMouseCursor("Castle/Dark brown.png", "troll");
 		window.setMouse(m);
 		//while(true)
 		//window.repaint();
+		
+		scene.addGameObject(follower);
 
 		run();
 	}
