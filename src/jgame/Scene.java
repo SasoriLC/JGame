@@ -83,9 +83,7 @@ public class Scene extends JComponent{
 			width = tiles.get(0).size() * tiles.get(0).get(0).getWidth();
 			height = tiles.size() * tiles.get(0).get(0).getHeight();
 			
-		} catch (FileNotFoundException e){
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 	}

@@ -11,14 +11,14 @@ package jgame.entity;
 public interface Observer {
 	
 	/**
-	 * This method is called when an event has occurred in on of the observable object  
+	 * This method is called when an event has occurred in one of the observable object
 	 * (entity or component)
 	 * @param entity - the observable object
 	 */
 	public void update(Observable entity);
 	
 	/**
-	 * This method is called when an event has occurred in on of the observable object  
+	 * This method is called when an event has occurred in one of the observable object
 	 * (entity or component)
 	 * @param entity - the observable object
 	 * @param metadata - the metadata to be transmitted 

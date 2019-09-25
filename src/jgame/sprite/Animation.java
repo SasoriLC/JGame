@@ -17,6 +17,7 @@ public class Animation {
 	private int currentIndex = 0;
 	private int maxIndex;
 	private boolean isRunning;
+	private boolean loop;
 	private Audio audio;
 	
 	
@@ -26,8 +27,13 @@ public class Animation {
 	 */
 	public Animation (){
 		timer = new Timer();
+
 	}
-	
+
+	public Animation (boolean loop){
+		this();
+		this.loop = loop;
+	}
 	/**
 	 * 
 	 * @return true if the animation is still running
@@ -61,6 +67,7 @@ public class Animation {
 	 * @since 1.0
 	 */
 	public void startNewAnimation(int maxIndex,long time){
+
 		isRunning = true;
 		this.maxIndex = maxIndex;
 		createNewSpriteChangeTask(maxIndex);
@@ -83,12 +90,14 @@ public class Animation {
 				if(audio != null)
 					audio.play();
 				currentIndex++;
-				if(currentIndex == maxIndex){
+				if(currentIndex == maxIndex && !loop){
 					currentIndex = 0;
 					isRunning = false;
 					if(audio != null)
 						audio.stop();
 					timerTask.cancel();
+				}else if(currentIndex==maxIndex){
+					currentIndex = 0;
 				}
 
 			}

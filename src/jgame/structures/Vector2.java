@@ -50,7 +50,7 @@ public class Vector2 {
 				timer.task();
 				x+=incX;
 				y+=incY;
-				System.out.println("X: " + x +  "\nY: " + y);
+
 			}
 
 			@Override
@@ -123,22 +123,5 @@ public class Vector2 {
 		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
 			return false;
 		return true;
-	}
-	
-	public static void main(String[] args){
-		Vector2 v1 = new Vector2(5481,-642);
-		Vector2 v2 = new Vector2(974,-180);
-		Timer t = new Timer(1000){
-			@Override
-			public void task(){
-				System.out.println("x: " + v2.x + " y: " + v2.y);
-			}
-			
-			@Override
-			public void onTimerEnd(){
-				System.out.println("Over");
-			}
-		};
-		v2.moveTowards(v1, t);
 	}
 }

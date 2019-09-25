@@ -56,7 +56,6 @@ public class GameObject extends Entity{
 		g.drawImage(sprite.getNextSpriteSequence(),
 					(int) (position.x - camera.position.x)
 					,(int) (position.y - camera.position.y), null);
-		g.drawString("X: " + position.x + "\nY: " + position.y, 50, 50);
 	}
 	
 	/**

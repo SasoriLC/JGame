@@ -30,8 +30,8 @@ public class GameObjectCollisionDetector implements Observer{
 			for(Tile tile: tiles){
 				if(tile.getTileType().equals(TileType.WALL)){
 					if(o.collided(tile)){
-						boolean verticalCollision = tile.getX() + tile.getWidth() <= o.position.x
-								|| o.position.x + o.getSprite().getSpriteWidth() <= tile.getX() ? false : true;
+						boolean verticalCollision = !(tile.getX() + tile.getWidth() <= o.position.x)
+								&& !(o.position.x + o.getSprite().getSpriteWidth() <= tile.getX());
 
 						if(verticalCollision){
 							if(tile.getY() + tile.getHeight() - 2 < o.position.y ){
@@ -42,8 +42,8 @@ public class GameObjectCollisionDetector implements Observer{
 						}
 
 
-						boolean horizontalCollision = (tile.getY() + tile.getHeight() <= o.position.y )
-								|| o.position.y  + o.getSprite().getSpriteHeight() <= tile.getY() ? false : true;
+						boolean horizontalCollision = (!(tile.getY() + tile.getHeight() <= o.position.y))
+								&& !(o.position.y + o.getSprite().getSpriteHeight() <= tile.getY());
 
 						if(horizontalCollision){
 							if(tile.getX() > o.position.x + o.getSprite().getSpriteWidth() - 2){

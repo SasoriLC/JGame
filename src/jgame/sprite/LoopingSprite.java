@@ -18,6 +18,7 @@ public class LoopingSprite extends Sprite{
 	public LoopingSprite(String spritePath, int quantity,long time) {
 		super(spritePath, quantity);
 		this.setSequence(0, quantity, time);
+		animation = new Animation(true);
 		animation.startNewAnimation(quantity, time);
 	}
 }

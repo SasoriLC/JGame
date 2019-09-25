@@ -22,10 +22,10 @@ import jgame.tile.Tile;
 import jgame.tile.TileType;
 public class Main {
 
-	private static float velocity = 1.5f;
+	private static float velocity = 5f;
 	private static final String MAP = "cave.scn";
 	private static final String PLAYER = "Sprites/sprite.png";
-	private static long time = 100;
+	private static long time = 200;
 	private static Scene scene;
 	private static Window window;
 
@@ -97,7 +97,6 @@ public class Main {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("Heyo\n"+ e.getX() + "\\" + e.getY());
 			}
 
 			@Override
@@ -115,9 +114,7 @@ public class Main {
 		});
 		m.setMouseCursor("Castle/Dark brown.png", "troll");
 		window.setMouse(m);
-		//while(true)
-		//window.repaint();
-		
+
 		scene.addGameObject(follower);
 
 		run();
@@ -126,7 +123,7 @@ public class Main {
 	private static void run(){
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
-		final double ns = 1000000000.0 / 180.0; //180fps max
+		final double ns = 1000000000.0 / 240.0; //240fps max
 		double delta = 0;
 		int frames = 0;
 		int updates = 0;
