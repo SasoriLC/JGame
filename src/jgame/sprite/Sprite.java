@@ -101,7 +101,7 @@ public class Sprite{
 	 * @since 1.0 
 	 */
 	public void setSequence(int start, int end,long time, Audio a){
-		animation.setAnimationAudio(a);
+		//animation.setAnimationAudio(a);
 		this.setSequence(start, end, time);
 	}
 

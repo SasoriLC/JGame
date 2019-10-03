@@ -1,6 +1,6 @@
 package jgame.component;
 
-import jgame.structures.Vector2;
+import jgame.structures.Point2D;
 /**
  * TODO
  * @author David Almeida
@@ -8,7 +8,7 @@ import jgame.structures.Vector2;
  */
 public class BoxCollider extends Component{
 	
-	public Vector2 position;
+	public Point2D position;
 	private int width;
 	private int height;
 	
@@ -21,7 +21,7 @@ public class BoxCollider extends Component{
 	 * @since 1.0
 	 */
 	public BoxCollider(float x, float y,int width, int height){
-		position = new Vector2(x,y);
+		position = new Point2D(x,y);
 		this.width = width;
 		this.height = height;
 	}

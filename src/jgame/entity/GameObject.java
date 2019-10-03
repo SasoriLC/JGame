@@ -1,10 +1,11 @@
 package jgame.entity;
 
 import java.awt.Graphics;
+
 import jgame.Scene;
 import jgame.Window;
 import jgame.sprite.Sprite;
-import jgame.structures.Vector2;
+import jgame.structures.Point2D;
 import jgame.tile.Tile;
 
 /**
@@ -18,8 +19,8 @@ public class GameObject extends Entity{
 	private Sprite sprite;
 	private float xD; //x direction
 	private float yD; //y direction
-	
-	
+
+
 	/**
 	 * 
 	 * @param sprite the sprite representing the game object
@@ -29,8 +30,8 @@ public class GameObject extends Entity{
 		super();
 		this.sprite = sprite;
 	}
-	
-	
+
+
 	/**
 	 * 
 	 * @param sprite the sprite representing the game object
@@ -40,10 +41,10 @@ public class GameObject extends Entity{
 	 */
 	public GameObject(Sprite sprite, int x, int y) {
 		this(sprite);
-		position = new Vector2(x,y);
+		position = new Point2D(x,y);
 	}
-	
-		
+
+
 	/**
 	 * Draws the game object in the scene
 	 * @param g the graphics of the scene
@@ -52,34 +53,36 @@ public class GameObject extends Entity{
 	public void draw(Graphics g){
 		move();
 		Camera camera = Camera.getInstance();
-		
-		g.drawImage(sprite.getNextSpriteSequence(),
+
+		if(sprite != null)
+			g.drawImage(sprite.getNextSpriteSequence(),
 					(int) (position.x - camera.position.x)
 					,(int) (position.y - camera.position.y), null);
 	}
-	
+
 	/**
 	 * Moves the game object in the current scene that is being displayed
 	 * @since 1.0
 	 */
 	private void move(){
+		//this.notifyObservers(xD,yD);
 		this.notifyObservers();
 		Scene scene = Window.getInstance().getScene();
+		
 		position.x += xD;
 		if(position.x < 0)
 			position.x = 0;
 		else if(position.x > scene.getWidth() - sprite.getSpriteWidth())
 			position.x = scene.getWidth() - sprite.getSpriteWidth();
-		
-		
+
+
 		position.y += yD;
 		if(position.y < 0)
 			position.y = 0;
 		else if(position.y > scene.getHeight() - sprite.getSpriteHeight())
 			position.y = scene.getHeight() - sprite.getSpriteHeight();
-		
 	}
-	
+
 	/**
 	 * @param velocity the velocity of the movement
 	 * <p>
@@ -87,7 +90,11 @@ public class GameObject extends Entity{
 	 * @since 1.0
 	 */
 	public void moveX(float velocity) {
+//		if(xD == 0)
 		xD = velocity;
+//		position.x += xD > 0 ? 1 : -1;
+//		System.out.println("xD: " + xD + " position.x: " + position.x);
+//		xD += xD > 0 ? -1 : 1;
 	}
 
 	/**
@@ -99,7 +106,7 @@ public class GameObject extends Entity{
 	public void moveY(float velocity) {
 		yD = velocity;
 	}
-	
+
 
 	/**
 	 * 
@@ -109,8 +116,8 @@ public class GameObject extends Entity{
 	public Sprite getSprite(){
 		return sprite;
 	}
-	
-	
+
+
 	/**
 	 * 
 	 * @param minX the starting x point of the rectangle
@@ -121,18 +128,18 @@ public class GameObject extends Entity{
 	 * @since 1.0
 	 */
 	private boolean isWithinRectangle(float minX, float minY,float maxX,float maxY){
-//		player1.x < player2.x + player2.width &&
-//	    player1.x + player1.width > player2.x &&
-//	    player1.y < player2.y + player2.height &&
-//	    player1.y + player1.height > player2.y
-	    
+		//		player1.x < player2.x + player2.width &&
+		//	    player1.x + player1.width > player2.x &&
+		//	    player1.y < player2.y + player2.height &&
+		//	    player1.y + player1.height > player2.y
+
 		return(position.x + getSprite().getSpriteWidth() >= minX 
 				&& position.x <= maxX)
 				|| (position.y  + getSprite().getSpriteHeight() >= minY 
 				&& position.y <= maxY);
 	}
-	
-	
+
+
 	/**
 	 * 
 	 * @param tile the tile to check
@@ -145,7 +152,7 @@ public class GameObject extends Entity{
 				tile.getX() + tile.getWidth(),
 				tile.getY() + tile.getHeight());
 	}
-	
+
 	/**
 	 * 
 	 * @param go
@@ -197,5 +204,5 @@ public class GameObject extends Entity{
 			return false;
 		return true;
 	}
-			
+
 }

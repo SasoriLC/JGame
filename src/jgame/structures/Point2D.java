@@ -1,30 +1,31 @@
 package jgame.structures;
 
-import jgame.entity.GameObject;
-import jgame.structures.timer.Timer;
+import jgame.Behavior;
+import jgame.structures.time.ContinuousTimer;
+import jgame.structures.time.PeriodicTimer;
+import jgame.structures.time.Timer;
 
 /**
- * This class represents a vector in a 2 dimensional space. 
+ * This class represents a point in a 2 dimensional space. 
  * The pair (x,y) is a R pair, this is, both are real numbers
  * @author David Almeida
  * @since 1.0
  */
-public class Vector2 {
-	public float x;
-	public float y;
+public class Point2D {
+	public float x,y;
 	private Timer currentTimer;
-	
+
 	/**
 	 * 
 	 * @param x - the x
 	 * @param y - the y
 	 * @since 1.0
 	 */
-	public Vector2(float x,float y){
+	public Point2D(float x,float y){
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	/**
 	 * 
 	 * @param newX of the target
@@ -37,30 +38,38 @@ public class Vector2 {
 		float moveX = Math.abs(x - newX) / timer.getTimeLeft();
 		moveX = newX > x ? moveX : -moveX;
 		final float incX = moveX;
-		
+
 		float moveY = Math.abs(y - newY) / timer.getTimeLeft();
 		moveY = newY > y ? moveY : -moveY;
 		final float incY = moveY;
 		if(currentTimer != null)
 			currentTimer.stop();
-		
-		currentTimer = new Timer(timer.getTimeLeft() + 2){
-			@Override
-			public void task() {
-				timer.task();
-				x+=incX;
-				y+=incY;
 
-			}
-
-			@Override
-			public void onTimerEnd() {
-				timer.onTimerEnd();
-			}
-		};
+		if(timer instanceof PeriodicTimer){
+			currentTimer = new PeriodicTimer(timer.getTimeLeft() + 2,
+					((PeriodicTimer)timer).getTimeBetweenTasks(),
+					() -> {
+						Behavior v = timer.getTimerExecutionTask();
+						if(v != null)
+							v.run();
+						x+=incX;
+						y+=incY;
+					}
+					,timer.getOnTimerEndTask());
+		}else{
+			currentTimer = new ContinuousTimer(timer.getTimeLeft() + 2,
+					() -> {
+						Behavior v = timer.getTimerExecutionTask();
+						if(v != null)
+							v.run();
+						x+=incX;
+						y+=incY;
+					}
+					,timer.getOnTimerEndTask());
+		}
 		currentTimer.start();
 	}
-	
+
 	/**
 	 * 
 	 * @param x of the target
@@ -69,9 +78,9 @@ public class Vector2 {
 	 * @since 1.0
 	 */
 	public void moveTowards (float x, float y, int time){
-		moveTowards(x, y,new Timer(time));
+		moveTowards(x, y,new ContinuousTimer(time,null));
 	}
-	
+
 	/**
 	 * 
 	 * @param target the target vector
@@ -79,21 +88,30 @@ public class Vector2 {
 	 * The timer cannot be started before.
 	 * @since 1.0
 	 */
-	public void moveTowards (Vector2 target, Timer timer){
+	public void moveTowards (Point2D target, Timer timer){
 		moveTowards(target.x,target.y,timer);
 	}
-	
+
 	/**
 	 * 
 	 * @param target the target vector
 	 * @param time the time in milliseconds
 	 * @since 1.0
 	 */
-	public void moveTowards (Vector2 target, int time){
+	public void moveTowards (Point2D target, int time){
 		moveTowards(target.x,target.y,time);
 	}
-
 	
+	public static float distance(float x1,float y1,float x2,float y2){
+		return (float)Math.sqrt(
+				Math.pow(x1-x2, 2) + Math.pow(y1 - y2, 2));
+	}
+	
+	public static float distance(Point2D p1,Point2D p2){
+		return distance(p1.x,p1.y,p2.x,p2.y);
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -117,7 +135,7 @@ public class Vector2 {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Vector2 other = (Vector2) obj;
+		Point2D other = (Point2D) obj;
 		if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
 			return false;
 		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))

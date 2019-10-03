@@ -5,7 +5,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import jgame.Audio;
@@ -18,11 +17,12 @@ import jgame.listeners.Mouse;
 import jgame.listeners.keyboard.Keyboard;
 import jgame.sprite.LoopingSprite;
 import jgame.sprite.Sprite;
+import jgame.structures.time.PeriodicTimer;
 import jgame.tile.Tile;
 import jgame.tile.TileType;
 public class Main {
 
-	private static float velocity = 5f;
+	private static float velocity = 1.5f;
 	private static final String MAP = "cave.scn";
 	private static final String PLAYER = "Sprites/sprite.png";
 	private static long time = 200;
@@ -38,7 +38,7 @@ public class Main {
 		int height = 600;//gd.getDisplayMode().getHeight();
 
 		Sprite s = new Sprite(PLAYER,16);
-		player = new GameObject(s,700,500);
+		player = new GameObject(s,750,425);
 		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
 
@@ -115,7 +115,7 @@ public class Main {
 		m.setMouseCursor("Castle/Dark brown.png", "troll");
 		window.setMouse(m);
 
-		scene.addGameObject(follower);
+		//scene.addGameObject(follower);
 
 		run();
 	}
@@ -139,7 +139,7 @@ public class Main {
 			frames++;
 			if(System.currentTimeMillis() - timer > 1000){ //1 second
 				timer += 1000;
-				System.out.println("Updates: " + updates + "\nFps: " + frames);
+				//System.out.println("Updates: " + updates + "\nFps: " + frames);
 				frames = updates = 0;
 			}
 		}

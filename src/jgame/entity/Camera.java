@@ -3,7 +3,7 @@ package jgame.entity;
 import java.util.ArrayList;
 
 import jgame.Scene;
-import jgame.structures.Vector2;
+import jgame.structures.Point2D;
 import jgame.tile.Tile;
 
 /**
@@ -37,7 +37,7 @@ public class Camera extends Entity{
 		this.target = target;
 		this.width = width;
 		this.height = height;
-		position = new Vector2(initialX,initialY);
+		position = new Point2D(initialX,initialY);
 		INSTANCE = this;
 	}
 	

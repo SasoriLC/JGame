@@ -3,7 +3,6 @@ package jgame;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,15 +10,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
-import jgame.entity.Observable;
-import jgame.entity.Observer;
+import jgame.structures.Point2D;
 import jgame.tile.Tile;
+import jgame.tile.TileType;
 
 /**
  * This class represents a Map.
@@ -188,9 +189,57 @@ public class Scene extends JComponent{
 		for(int y = minY; y < maxY; y++){
 			for(int x  = minX; x < maxX; x++){
 				if(y < this.tiles.size() && x < this.tiles.get(0).size())
-				tiles.add(this.tiles.get(y).get(x));
+					tiles.add(this.tiles.get(y).get(x));
 			}
 		}
 		return tiles;
+	}
+	
+	/**
+	 * 
+	 * @param xMin minimum x point
+	 * @param xMax maximum x point
+	 * @param yMin minimum y point
+	 * @param yMax maximum y point
+	 * @param type tile's type
+	 * @return the closest tiles of type @type 
+	 */
+	public List<Tile> getClosestTileTypeFrom(int xMin, int xMax, int yMin, int yMax
+			,TileType type){
+		Tile aux = tiles.get(0).get(0);
+				
+		int minX = (int) xMin / aux.getWidth();
+		int maxX = (int) xMax / aux.getWidth() + 1;
+		
+		int minY = (int) yMin / aux.getHeight();
+		int maxY = (int) yMax / aux.getHeight() + 1;
+		
+		List<Tile> tiles = new ArrayList<>();
+		//float minDistance = Float.MAX_VALUE;
+		for(int x = minX; x < maxX; x++){
+			for(int y = minY; y < maxY; y++){
+				if(y < this.tiles.size() && x < this.tiles.get(0).size()){
+					Tile t = this.tiles.get(y).get(x);
+					if(t.getTileType().getClass().equals(type.getClass())){
+						tiles.add(t);
+						//float distance = Point2D.distance(xMin,yMin,t.getX(),t.getY());
+						//if(distance - minDistance < 0.0001)
+						//	minDistance = distance;
+					}
+				}
+			}
+		}
+		return tiles;
+		
+		//final float minDist = minDistance;
+		//System.out.println("min distance: " + minDist);
+		//System.out.println("x min: " + xMin + " y min: " + yMin);
+		
+		//return tiles.stream().filter(x -> {
+			//System.out.println("tile x: " + x.getX() + " tile y: " + x.getY()
+			//		+ "\ndistance: " + Point2D.distance(x.getX(), x.getY(), xMin, yMin));
+			//System.out.println(Point2D.distance(x.getX(), x.getY(), xMin, yMin) - minDist  < 0.0001);
+		//	return Point2D.distance(x.getX(), x.getY(), xMin, yMin) - minDist  < 0.0001;
+		//}).collect(Collectors.toList());
 	}
 }

@@ -11,6 +11,7 @@ import jgame.entity.GameObject;
  */
 class DefaultKeyListener implements KeyListener{
 	private Keyboard keyboard;
+
 	
 	/**
 	 * 
@@ -23,16 +24,17 @@ class DefaultKeyListener implements KeyListener{
 	
 	@Override
 	public synchronized void keyPressed(KeyEvent event) {
-		keyboard.executeBehavior(event.getKeyCode());
+		//keyboard.executeBehavior(event.getKeyCode());
+		keyboard.press(event.getKeyCode());
 	}
 
 	@Override
 	public synchronized void keyReleased(KeyEvent event) {
-		Camera cam = Camera.getInstance();
-		GameObject player = cam.getTarget();
+		GameObject player = Camera.getInstance().getTarget();
 		keyboard.executeBehavior(event.getKeyCode());
 		player.moveX(0);
 		player.moveY(0);
+		keyboard.release(event.getKeyCode());
 	}
 
 	@Override

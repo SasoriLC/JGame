@@ -3,7 +3,7 @@ package jgame.entity;
 import java.util.HashSet;
 import java.util.Set;
 import jgame.component.Component;
-import jgame.structures.Vector2;
+import jgame.structures.Point2D;
 /**
  * An entity represents every object, example: Game Object, Camera.
  * An entity is NOT a component.
@@ -12,7 +12,7 @@ import jgame.structures.Vector2;
  * @since 1.0
  */
 public abstract class Entity extends Observable{
-	public Vector2 position;
+	public Point2D position;
 	protected Set<Component> components;
 	
 	/**
