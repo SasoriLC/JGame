@@ -25,7 +25,7 @@ public class Main {
 	private static float velocity = 1.5f;
 	private static final String MAP = "cave.scn";
 	private static final String PLAYER = "Sprites/sprite.png";
-	private static long time = 200;
+	private static long time = 100;
 	private static Scene scene;
 	private static Window window;
 
@@ -64,32 +64,55 @@ public class Main {
 
 		window = Window.create(scene,width,height);
 
-		Keyboard k = new Keyboard();
+		Keyboard k = new Keyboard(true);
 
 
 		Audio a = new Audio("Sounds/grass.mp3");
 		//create the keyboard behaviors
-		k.addBehavior(KeyEvent.VK_UP, () -> { 
+		k.addPressBehavior(KeyEvent.VK_UP, () -> { 
 			player.moveY(-velocity);
 			player.getSprite().setSequence(12,16, time,a);
 			follower.position.moveTowards(player.position, 1000);
 
 		});
-		k.addBehavior(KeyEvent.VK_DOWN,() -> {
+		k.addPressBehavior(KeyEvent.VK_DOWN,() -> {
 			player.moveY(velocity);
 			player.getSprite().setSequence(0, 4, time,a);
 			follower.position.moveTowards(player.position, 1000);
 		});
-		k.addBehavior(KeyEvent.VK_LEFT, () -> {
+		k.addPressBehavior(KeyEvent.VK_LEFT, () -> {
 			player.moveX(-velocity);
 			player.getSprite().setSequence(4,8, time,a);
 			follower.position.moveTowards(player.position, 1000);
 		});
-		k.addBehavior(KeyEvent.VK_RIGHT, () -> {
+		k.addPressBehavior(KeyEvent.VK_RIGHT, () -> {
 			player.moveX(velocity);
 			player.getSprite().setSequence(8,12, time,a);
 			follower.position.moveTowards(player.position, 1000);
 		});
+		
+		//release
+		k.addReleaseBehavior(KeyEvent.VK_UP, () -> { 
+			player.moveY(0);
+			player.moveX(0);
+			player.getSprite().getAnimation().stop();
+		});
+		k.addReleaseBehavior(KeyEvent.VK_DOWN,() -> {
+			player.moveY(0);
+			player.moveX(0);
+			player.getSprite().getAnimation().stop();
+		});
+		k.addReleaseBehavior(KeyEvent.VK_LEFT, () -> {
+			player.moveX(0);
+			player.moveY(0);
+			player.getSprite().getAnimation().stop();
+		});
+		k.addReleaseBehavior(KeyEvent.VK_RIGHT, () -> {
+			player.moveX(0);
+			player.moveY(0);
+			player.getSprite().getAnimation().stop();
+		});
+		
 		window.setKeyboard(k);
 
 		Mouse m = new Mouse();
@@ -115,11 +138,11 @@ public class Main {
 		m.setMouseCursor("Castle/Dark brown.png", "troll");
 		window.setMouse(m);
 
-		//scene.addGameObject(follower);
+		scene.addGameObject(follower);
 
 		run();
 	}
-
+	
 	private static void run(){
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();

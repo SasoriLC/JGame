@@ -6,13 +6,13 @@ import jgame.Behavior;
 
 public class PeriodicTimer extends Timer{
 
-	private int timeBetweenTasks;
+	private long timeBetweenTasks;
 	
 	/**
 	 * {@inheritDoc}
 	 * @param timerBetweenTasks the time between two successive tasks in milliseconds
 	 */
-	public PeriodicTimer(int milli,int timeBetweenTasks, Behavior task) {
+	public PeriodicTimer(long milli,long timeBetweenTasks, Behavior task) {
 		this(milli,timeBetweenTasks,task,null);
 	}
 	
@@ -20,7 +20,7 @@ public class PeriodicTimer extends Timer{
 	 * {@inheritDoc}
 	 * @param timerBetweenTasks the time between two successive tasks in milliseconds
 	 */
-	public PeriodicTimer(int milli,int timeBetweenTasks, Behavior task, Behavior taskOnTimerEnd){
+	public PeriodicTimer(long milli,long timeBetweenTasks, Behavior task, Behavior taskOnTimerEnd){
 		super(milli,task,taskOnTimerEnd);
 		this.timeBetweenTasks = timeBetweenTasks;
 	}
@@ -58,7 +58,7 @@ public class PeriodicTimer extends Timer{
 	 * @return the timeBetweenTasks
 	 * @since 1.0
 	 */
-	public int getTimeBetweenTasks() {
+	public long getTimeBetweenTasks() {
 		return timeBetweenTasks;
 	}
 

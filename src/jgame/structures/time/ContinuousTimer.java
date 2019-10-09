@@ -9,14 +9,14 @@ public class ContinuousTimer extends Timer{
 	/**
 	 * {@inheritDoc}
 	 */
-	public ContinuousTimer(int milli, Behavior task) {
+	public ContinuousTimer(long milli, Behavior task) {
 		super(milli, task);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ContinuousTimer(int milli, Behavior task, Behavior taskOnTimerEnd){
+	public ContinuousTimer(long milli, Behavior task, Behavior taskOnTimerEnd){
 		super(milli,task);
 	}
 

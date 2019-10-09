@@ -18,11 +18,9 @@ import jgame.exceptions.SpriteSequenceInvalid;
  */
 public class Sprite{
 	protected BufferedImage image;
-	protected BufferedImage[] sprite;
-	protected BufferedImage[] sequence;
+	protected BufferedImage[] sprite,sequence;
 	protected Animation animation;
-	protected int spriteWidth;
-	protected int spriteHeight;
+	protected int spriteWidth,spriteHeight;
 
 	/**
 	 * 
@@ -33,7 +31,7 @@ public class Sprite{
 	 */
 	public Sprite(String spritePath, int quantity){
 		sprite = new BufferedImage[quantity];
-		animation = new Animation();
+		animation = new Animation(false);
 		try {
 			image = ImageIO.read(new File(spritePath));
 
@@ -83,7 +81,6 @@ public class Sprite{
 			//create a new animation
 			if(!animation.isRunning())
 				animation.startNewAnimation(sequence.length, time);
-
 
 		}catch(SpriteSequenceInvalid e){
 			e.printStackTrace();
@@ -136,6 +133,12 @@ public class Sprite{
 		return spriteHeight;
 	}
 
+	/**
+	 * @return the animation
+	 */
+	public Animation getAnimation() {
+		return animation;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

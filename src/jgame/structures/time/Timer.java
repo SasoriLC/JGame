@@ -9,7 +9,7 @@ import jgame.Behavior;
  * @see jgame.structures.time.Timer
  */
 public abstract class Timer{
-	protected int milliseconds;
+	protected long milliseconds;
 	protected java.util.Timer timer;
 	protected TimerTask task;
 	protected Behavior timerExecutionTask, onTimerEndTask;
@@ -20,7 +20,7 @@ public abstract class Timer{
 	 * @param task the task to execute
 	 * @since 1.0
 	 */
-	public Timer(int milli, Behavior task){
+	public Timer(long milli, Behavior task){
 		timer = new java.util.Timer();
 		timerExecutionTask = task;
 		this.milliseconds = milli;
@@ -33,7 +33,7 @@ public abstract class Timer{
 	 * @param taskOnTimerEnd the task to execute when the timer ends
 	 * @since 1.0
 	 */
-	public Timer(int milli, Behavior task, Behavior taskOnTimerEnd){
+	public Timer(long milli, Behavior task, Behavior taskOnTimerEnd){
 		this(milli,task);
 		onTimerEndTask = taskOnTimerEnd;
 	}
@@ -65,7 +65,7 @@ public abstract class Timer{
 	 * @return the time left on the timer
 	 * @since 1.0
 	 */
-	public final int getTimeLeft(){
+	public final long getTimeLeft(){
 		return milliseconds;
 	}
 	

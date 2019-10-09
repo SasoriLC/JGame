@@ -1,6 +1,5 @@
 package jgame.listeners.keyboard;
 import java.util.HashMap;
-
 import jgame.Behavior;
 import jgame.structures.time.InfiniteTimer;
 
@@ -12,7 +11,7 @@ class KeyboardInputManager {
 	KeyboardInputManager(Keyboard k){
 		keysBeingPressed = new HashMap<>();
 		keyboard = k;
-		new InfiniteTimer(40, () -> {
+		new InfiniteTimer(50, () -> {
 			synchronized(keysBeingPressed){
 				keysBeingPressed.forEach((key,b) -> b.run());
 			}
@@ -21,7 +20,7 @@ class KeyboardInputManager {
 
 	void keyPressed(int k){
 		synchronized(keysBeingPressed){
-			Behavior b = keyboard.getBehavior(k);
+			Behavior b = keyboard.getPressedBehavior(k);
 			if(b != null)
 				keysBeingPressed.put(k, b);
 		}
@@ -29,6 +28,9 @@ class KeyboardInputManager {
 
 	void keyReleased(int k){
 		synchronized(keysBeingPressed){
+			Behavior b = keyboard.getReleaseBehavior(k);
+			if(b != null)
+				b.run();
 			keysBeingPressed.remove(k);
 		}
 	}

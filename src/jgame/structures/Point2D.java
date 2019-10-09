@@ -28,45 +28,32 @@ public class Point2D {
 
 	/**
 	 * 
-	 * @param newX of the target
-	 * @param newY of the target
-	 * @param timer the timer to be used while the vector reaches its destination. 
-	 * The timer cannot be started before.
+	 * @param x of the target
+	 * @param y of the target
+	 * @param time the time in milliseconds to move to the desired target
+	 * @param b the function to be executed while the target reaches its destination
 	 * @since 1.0
 	 */
-	public void moveTowards (float newX, float newY, Timer timer){
-		float moveX = Math.abs(x - newX) / timer.getTimeLeft();
+	public void moveTowards (float newX, float newY,int time, Behavior b){
+		float moveX = Math.abs(x - newX) / time;
 		moveX = newX > x ? moveX : -moveX;
 		final float incX = moveX;
 
-		float moveY = Math.abs(y - newY) / timer.getTimeLeft();
+		float moveY = Math.abs(y - newY) / time;
 		moveY = newY > y ? moveY : -moveY;
 		final float incY = moveY;
 		if(currentTimer != null)
 			currentTimer.stop();
 
-		if(timer instanceof PeriodicTimer){
-			currentTimer = new PeriodicTimer(timer.getTimeLeft() + 2,
-					((PeriodicTimer)timer).getTimeBetweenTasks(),
-					() -> {
-						Behavior v = timer.getTimerExecutionTask();
-						if(v != null)
-							v.run();
-						x+=incX;
-						y+=incY;
-					}
-					,timer.getOnTimerEndTask());
-		}else{
-			currentTimer = new ContinuousTimer(timer.getTimeLeft() + 2,
-					() -> {
-						Behavior v = timer.getTimerExecutionTask();
-						if(v != null)
-							v.run();
-						x+=incX;
-						y+=incY;
-					}
-					,timer.getOnTimerEndTask());
-		}
+
+		currentTimer = new ContinuousTimer(time + 2,
+				() -> {
+					if(b != null)
+						b.run();
+					x+=incX;
+					y+=incY;
+				});
+
 		currentTimer.start();
 	}
 
@@ -74,39 +61,39 @@ public class Point2D {
 	 * 
 	 * @param x of the target
 	 * @param y of the target
-	 * @param time the time in milliseconds
+	 * @param time the time in milliseconds to move to the desired target
 	 * @since 1.0
 	 */
 	public void moveTowards (float x, float y, int time){
-		moveTowards(x, y,new ContinuousTimer(time,null));
+		moveTowards(x, y,time,null);
 	}
 
 	/**
 	 * 
 	 * @param target the target vector
-	 * @param timer the timer to be used while the vector reaches its destination. 
-	 * The timer cannot be started before.
+	 * @param b the function to be executed while the target reaches its destination
+	 * @param time the time in milliseconds to move to the desired target
 	 * @since 1.0
 	 */
-	public void moveTowards (Point2D target, Timer timer){
-		moveTowards(target.x,target.y,timer);
+	public void moveTowards (Point2D target, int time, Behavior b){
+		moveTowards(target.x,target.y,time,b);
 	}
 
 	/**
 	 * 
 	 * @param target the target vector
-	 * @param time the time in milliseconds
+	 * @param time the time in milliseconds to move to the desired target
 	 * @since 1.0
 	 */
 	public void moveTowards (Point2D target, int time){
 		moveTowards(target.x,target.y,time);
 	}
-	
+
 	public static float distance(float x1,float y1,float x2,float y2){
 		return (float)Math.sqrt(
 				Math.pow(x1-x2, 2) + Math.pow(y1 - y2, 2));
 	}
-	
+
 	public static float distance(Point2D p1,Point2D p2){
 		return distance(p1.x,p1.y,p2.x,p2.y);
 	}

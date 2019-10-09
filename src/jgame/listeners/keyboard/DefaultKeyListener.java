@@ -30,10 +30,6 @@ class DefaultKeyListener implements KeyListener{
 
 	@Override
 	public synchronized void keyReleased(KeyEvent event) {
-		GameObject player = Camera.getInstance().getTarget();
-		keyboard.executeBehavior(event.getKeyCode());
-		player.moveX(0);
-		player.moveY(0);
 		keyboard.release(event.getKeyCode());
 	}
 

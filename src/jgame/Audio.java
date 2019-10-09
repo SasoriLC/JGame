@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
-public class Audio {
+public class Audio{
 
 	private BasicPlayer player;
 	private Thread t;
