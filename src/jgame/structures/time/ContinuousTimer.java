@@ -3,7 +3,14 @@ package jgame.structures.time;
 import java.util.TimerTask;
 
 import jgame.Behavior;
-
+/**
+ * This timer executes a certain tasks after a 1 millisecond interval.
+ * This timer can be implement using a PeriodicTimer with a 1 millisecond interval between 
+ * two consecutive tasks. 
+ * @author David Almeida
+ * @see jgame.structures.time.Timer
+ * @since 1.0
+ */
 public class ContinuousTimer extends Timer{
 
 	/**

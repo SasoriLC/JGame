@@ -6,6 +6,7 @@ import jgame.Behavior;
 /**
  * This class should be used when a timer is supposed to be in execution forever
  * @author David Almeida
+ * @see jgame.structures.time.Timer
  * @since 1.0
  */
 public class InfiniteTimer extends Timer{
@@ -31,10 +32,7 @@ public class InfiniteTimer extends Timer{
 		task = new TimerTask(){
 			@Override
 			public void run() {
-				//synchronized(AnimationsThread.lock){
-					//System.out.println("TIMER");
-					timerExecutionTask.run();
-				//}
+				timerExecutionTask.run();
 			}	
 		};
 		timer.schedule(task, timeBetweenTasks, timeBetweenTasks);

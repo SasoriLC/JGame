@@ -9,5 +9,6 @@ package jgame.tile;
  * @since 1.0
  */
 public enum TileType {
+	//TODO
 	WALL,NORMAL;
 }

@@ -1,11 +1,9 @@
 package jgame;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.PointerInfo;
 import javax.swing.JFrame;
-import jgame.listeners.Mouse;
+
 import jgame.listeners.keyboard.Keyboard;
+import jgame.listeners.mouse.Mouse;
 
 /**
  * 
@@ -50,6 +48,7 @@ public class Window extends JFrame{
 	 * @param scene the scene
 	 * @param width the width of the window
 	 * @param height the height of the window
+	 * @return the window
 	 * @since 1.0
 	 */
 	public static Window create(Scene scene, int width, int height){

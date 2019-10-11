@@ -1,8 +1,5 @@
 package jgame.tile;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 /**
  * This class represents a tile.
  * <br>
@@ -23,7 +20,7 @@ public class Tile implements Cloneable{
 	 * @param image the image representing the tile
 	 * @param number the number of the tile
 	 * @param x the x of the tile in the scene
-	 * @param x the y of the tile in the scene
+	 * @param y the y of the tile in the scene
 	 * @since 1.0
 	 */
 	public Tile(BufferedImage image, int number,int x,int y){
@@ -38,7 +35,7 @@ public class Tile implements Cloneable{
 	 * @param image the image representing the tile
 	 * @param number the number of the tile
 	 * @param x the x of the tile in the scene
-	 * @param x the y of the tile in the scene
+	 * @param y the y of the tile in the scene
 	 * @param type the tile's type
 	 * @since 1.0
 	 */

@@ -6,21 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
-
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
-import jgame.structures.Point2D;
+import jgame.exceptions.TileNotFoundException;
 import jgame.tile.Tile;
-import jgame.tile.TileType;
 
 /**
  * This class represents a Map.
@@ -32,15 +25,20 @@ import jgame.tile.TileType;
  * Game objects
  * <br>
  * A camera to follow a certain game object of the scene
- * @author Sasori
+ * @author David Almeida
  * @since 1.0
+ * @see jgame.entity.GameObject
+ * @see jgame.OrderedLayerSet
+ * @see jgame.tile.Tile
  */
 @SuppressWarnings("serial")
 public class Scene extends JComponent{
 	private ArrayList<ArrayList<Tile>> tiles; //tile's matrix of the scene
-	private Set<GameObject> gameObjects; //the game objects in the scene
+	private OrderedLayerSet gameObjects; //the game objects in the scene
+	private List<GameObject> visibleGameObjects;
 	private int width;
 	private int height;
+	
 	/**
 	 * Creates a scene
 	 * @param scnFilePath the path of the scene
@@ -49,7 +47,8 @@ public class Scene extends JComponent{
 	public Scene(String scnFilePath){
 		try(Scanner sc = new Scanner(new File(scnFilePath))) {
 			tiles = new ArrayList<>();
-			gameObjects = new HashSet<>();
+			gameObjects = new OrderedLayerSet();
+			visibleGameObjects = new ArrayList<>();
 
 			int currentTileNumber = 1;
 			int y = 0;
@@ -83,7 +82,10 @@ public class Scene extends JComponent{
 
 			width = tiles.get(0).size() * tiles.get(0).get(0).getWidth();
 			height = tiles.size() * tiles.get(0).get(0).getHeight();
-			
+
+
+		} catch (TileNotFoundException e){
+			e.printStackTrace();
 		} catch (IOException e){
 			e.printStackTrace();
 		}
@@ -136,7 +138,7 @@ public class Scene extends JComponent{
 		//center the scene
 		Camera camera = Camera.getInstance();
 		camera.moveToTarget(this);
-		
+
 		//paint the map
 		Tile aux = tiles.get(0).get(0);
 
@@ -150,7 +152,7 @@ public class Scene extends JComponent{
 		//+1 because of floating point numbers
 		int xMax = Math.min(tiles.get(0).size()
 				, (int) camera.position.x + (camera.getWidth() / aux.getWidth()) + 1);
-		
+
 		int yMin = Math.max(0, (int) camera.position.y / aux.getHeight());
 		int yMax = Math.min(tiles.size(), 
 				(int)camera.position.y + (camera.getHeight() / aux.getHeight()) + 1);
@@ -165,11 +167,44 @@ public class Scene extends JComponent{
 		}
 
 		//paint the game objects
+		visibleGameObjects = new ArrayList<>();
 		for(GameObject gO: gameObjects){
-			gO.draw(g);
+			//only draw the necessary game objects
+			if(gO.position.x + gO.getSprite().getSpriteWidth() >= camera.position.x
+					&& gO.position.x <= camera.position.x + camera.getWidth()
+					&& gO.position.y + gO.getSprite().getSpriteWidth() >= camera.position.y
+					&& gO.position.y <= camera.position.y + camera.getHeight()){
+				visibleGameObjects.add(gO);
+				gO.draw(g);
+			}
+			
 		}
 	}
 	
+	/**
+	 * 
+	 * @return the all the game objects that are currently being shown on the scene
+	 * @since 1.0
+	 */
+	public List<GameObject> getVisibleGameObjects(){
+		return visibleGameObjects;
+	}
+	
+	/**
+	 * 
+	 * @param name the name of the game object
+	 * @return the game objects of this scene that have a name equal to @name
+	 * @since 1.0
+	 */
+	public List<GameObject> getGameObjectsByName(String name){
+		List<GameObject> result = new ArrayList<GameObject>();
+		for(GameObject g: gameObjects)
+			if(g.getName().equals(name))
+				result.add(g);
+		
+		return result;
+	}
+
 	/**
 	 * 
 	 * @param gO the target
@@ -178,13 +213,13 @@ public class Scene extends JComponent{
 	 */
 	public List<Tile> getGameObjectCurrentTiles(GameObject gO){
 		Tile aux = tiles.get(0).get(0);
-				
+
 		int minX = (int) gO.position.x/ aux.getWidth();
 		int maxX = (int) ((gO.position.x + gO.getSprite().getSpriteWidth()) / aux.getWidth()) + 1;
-		
+
 		int minY = (int) gO.position.y / aux.getHeight();
 		int maxY = (int) ((gO.position.y+ gO.getSprite().getSpriteHeight()) / aux.getHeight()) + 1;
-		
+
 		List<Tile> tiles = new ArrayList<>();
 		for(int y = minY; y < maxY; y++){
 			for(int x  = minX; x < maxX; x++){
@@ -193,53 +228,5 @@ public class Scene extends JComponent{
 			}
 		}
 		return tiles;
-	}
-	
-	/**
-	 * 
-	 * @param xMin minimum x point
-	 * @param xMax maximum x point
-	 * @param yMin minimum y point
-	 * @param yMax maximum y point
-	 * @param type tile's type
-	 * @return the closest tiles of type @type 
-	 */
-	public List<Tile> getClosestTileTypeFrom(int xMin, int xMax, int yMin, int yMax
-			,TileType type){
-		Tile aux = tiles.get(0).get(0);
-				
-		int minX = (int) xMin / aux.getWidth();
-		int maxX = (int) xMax / aux.getWidth() + 1;
-		
-		int minY = (int) yMin / aux.getHeight();
-		int maxY = (int) yMax / aux.getHeight() + 1;
-		
-		List<Tile> tiles = new ArrayList<>();
-		//float minDistance = Float.MAX_VALUE;
-		for(int x = minX; x < maxX; x++){
-			for(int y = minY; y < maxY; y++){
-				if(y < this.tiles.size() && x < this.tiles.get(0).size()){
-					Tile t = this.tiles.get(y).get(x);
-					if(t.getTileType().getClass().equals(type.getClass())){
-						tiles.add(t);
-						//float distance = Point2D.distance(xMin,yMin,t.getX(),t.getY());
-						//if(distance - minDistance < 0.0001)
-						//	minDistance = distance;
-					}
-				}
-			}
-		}
-		return tiles;
-		
-		//final float minDist = minDistance;
-		//System.out.println("min distance: " + minDist);
-		//System.out.println("x min: " + xMin + " y min: " + yMin);
-		
-		//return tiles.stream().filter(x -> {
-			//System.out.println("tile x: " + x.getX() + " tile y: " + x.getY()
-			//		+ "\ndistance: " + Point2D.distance(x.getX(), x.getY(), xMin, yMin));
-			//System.out.println(Point2D.distance(x.getX(), x.getY(), xMin, yMin) - minDist  < 0.0001);
-		//	return Point2D.distance(x.getX(), x.getY(), xMin, yMin) - minDist  < 0.0001;
-		//}).collect(Collectors.toList());
 	}
 }

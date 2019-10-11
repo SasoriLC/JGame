@@ -1,23 +1,19 @@
 package test;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
 import jgame.Audio;
 import jgame.GameObjectCollisionDetector;
 import jgame.Scene;
 import jgame.Window;
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
-import jgame.listeners.Mouse;
 import jgame.listeners.keyboard.Keyboard;
+import jgame.listeners.mouse.Mouse;
 import jgame.sprite.LoopingSprite;
 import jgame.sprite.Sprite;
-import jgame.structures.time.PeriodicTimer;
 import jgame.tile.Tile;
 import jgame.tile.TileType;
 public class Main {
@@ -25,26 +21,28 @@ public class Main {
 	private static float velocity = 1.5f;
 	private static final String MAP = "cave.scn";
 	private static final String PLAYER = "Sprites/sprite.png";
-	private static long time = 100;
+	private static long time = 400;
 	private static Scene scene;
 	private static Window window;
 
 	private static GameObject player;
-	private static GameObject follower = new GameObject(new Sprite("Sprites/naercio.png",1),100,370);
+	private static GameObject follower = new GameObject(new Sprite("Sprites/test.png",4),100,450,1);
 
 	public static void main(String[] args) throws Exception{
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		//GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = 800;//gd.getDisplayMode().getWidth();
 		int height = 600;//gd.getDisplayMode().getHeight();
 
 		Sprite s = new Sprite(PLAYER,16);
-		player = new GameObject(s,750,425);
+		player = new GameObject(s,750,425,4);
 		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
 
 		scene = new Scene(MAP);
 		scene.addGameObject(player); //me
 		player.addObserver(new GameObjectCollisionDetector());
+		follower.getSprite().setSequence(0, 1, 9999);
+		follower.setCollidableness(true);
 		//follower.addObserver(new GameObjectCollisionDetector());
 
 		//add collisions. Note that this only will work correctly in the following maps: cave and Collision test scene
@@ -72,23 +70,23 @@ public class Main {
 		k.addPressBehavior(KeyEvent.VK_UP, () -> { 
 			player.moveY(-velocity);
 			player.getSprite().setSequence(12,16, time,a);
-			follower.position.moveTowards(player.position, 1000);
+//			follower.position.moveTowards(player.position, 1000);
 
 		});
 		k.addPressBehavior(KeyEvent.VK_DOWN,() -> {
 			player.moveY(velocity);
 			player.getSprite().setSequence(0, 4, time,a);
-			follower.position.moveTowards(player.position, 1000);
+//			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addPressBehavior(KeyEvent.VK_LEFT, () -> {
 			player.moveX(-velocity);
 			player.getSprite().setSequence(4,8, time,a);
-			follower.position.moveTowards(player.position, 1000);
+//			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addPressBehavior(KeyEvent.VK_RIGHT, () -> {
 			player.moveX(velocity);
 			player.getSprite().setSequence(8,12, time,a);
-			follower.position.moveTowards(player.position, 1000);
+//			follower.position.moveTowards(player.position, 1000);
 		});
 		
 		//release
@@ -157,46 +155,47 @@ public class Main {
 			while(delta >= 1){
 				window.repaint();
 				delta--;
-				updates++;
+				frames++;
 			}
-			frames++;
+			updates++;
 			if(System.currentTimeMillis() - timer > 1000){ //1 second
 				timer += 1000;
-				//System.out.println("Updates: " + updates + "\nFps: " + frames);
+				System.out.println("Updates: " + updates + "\nFps: " + frames);
 				frames = updates = 0;
 			}
 		}
 	}
 
 	private static void addObjects(){
-		GameObject torch = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),725,370);
+		int time = 1200;
+		GameObject torch = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,370,0);
 		scene.addGameObject(torch);
 
-		GameObject torch1 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),575,370);
+		GameObject torch1 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,370,0);
 		scene.addGameObject(torch1);
 
-		GameObject torch2 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),575,420);
+		GameObject torch2 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,420,0);
 		scene.addGameObject(torch2);
 
-		GameObject torch3 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),575,470);
+		GameObject torch3 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,470,0);
 		scene.addGameObject(torch3);
 
-		GameObject torch4 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),575,520);
+		GameObject torch4 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,520,0);
 		scene.addGameObject(torch4);
 
-		GameObject torch5 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),575,570);
+		GameObject torch5 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,570,0);
 		scene.addGameObject(torch5);
 
-		GameObject torch6 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),725,420);
+		GameObject torch6 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,420,0);
 		scene.addGameObject(torch6);
 
-		GameObject torch7 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),725,470);
+		GameObject torch7 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,470,0);
 		scene.addGameObject(torch7);
 
-		GameObject torch8 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),725,520);
+		GameObject torch8 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,520,0);
 		scene.addGameObject(torch8);
 
-		GameObject torch9 = new GameObject(new LoopingSprite("Sprites/torch.png",9,150),725,570);
+		GameObject torch9 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,570,0);
 		scene.addGameObject(torch9);
 	}
 }

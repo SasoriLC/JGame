@@ -1,12 +1,9 @@
 package jgame;
 
 import java.util.List;
-
 import jgame.entity.GameObject;
 import jgame.entity.Observable;
 import jgame.entity.Observer;
-import jgame.sprite.Sprite;
-import jgame.structures.Point2D;
 import jgame.tile.Tile;
 import jgame.tile.TileType;
 /**
@@ -30,43 +27,65 @@ public class GameObjectCollisionDetector implements Observer{
 			
 			Scene currentScene = Window.getInstance().getScene();
 			List<Tile> tiles = currentScene.getGameObjectCurrentTiles(o);
-		
+			List<GameObject> gos = currentScene.getVisibleGameObjects();
 			
 			for(Tile tile: tiles){
 				if(tile.getTileType().equals(TileType.WALL)){
 					if(o.collided(tile)){
-						pushGameObjectFromTile(o,tile);
+						pushGameObjectFrom(o,tile.getX(),tile.getY(),
+								tile.getX() + tile.getWidth()
+								, tile.getY() + tile.getHeight());
 					}
+				}
+			}
+			
+			for(GameObject g: gos){
+				if(o.collided(g) && g.isCollidable()){
+					pushGameObjectFrom(o, (int)g.position.x, (int)g.position.y
+							, (int)g.position.x + g.getSprite().getSpriteWidth()
+							, (int)g.position.y + g.getSprite().getSpriteHeight());
 				}
 			}
 		}
 	}
 
-	private void pushGameObjectFromTile(GameObject o, Tile tile){
-		boolean verticalCollision = !(tile.getX() + tile.getWidth() <= o.position.x)
-				&& !(o.position.x + o.getSprite().getSpriteWidth() <= tile.getX());
+	/**
+	 * This method push a game object away from the given point
+	 * @param o the game object
+	 * @param minX the minimum x 
+	 * @param minY the minimum y
+	 * @param maxX the maximum x
+	 * @param maxY the maximum y
+	 * @since 1.0
+	 */
+	private void pushGameObjectFrom(GameObject o, int minX, int minY, int maxX, int maxY){
+		boolean verticalCollision = !(maxX <= o.position.x)
+				&& !(o.position.x + o.getSprite().getSpriteWidth() <= minX);
 
 		if(verticalCollision){
-			if(tile.getY() + tile.getHeight() - 2 < o.position.y ){
-				o.position.y = tile.getY() + tile.getHeight();
-			}else if(tile.getY() > o.position.y + o.getSprite().getSpriteHeight() - 2){
-				o.position.y = tile.getY() - o.getSprite().getSpriteHeight();
+			if(maxY - 2 < o.position.y ){
+				o.position.y = maxY;
+			}else if(minY > o.position.y + o.getSprite().getSpriteHeight() - 2){
+				o.position.y = minY - o.getSprite().getSpriteHeight();
 			}
 		}
 
 
-		boolean horizontalCollision = (!(tile.getY() + tile.getHeight() <= o.position.y))
-				&& !(o.position.y + o.getSprite().getSpriteHeight() <= tile.getY());
+		boolean horizontalCollision = (!(maxY <= o.position.y))
+				&& !(o.position.y + o.getSprite().getSpriteHeight() <= minY);
 
 		if(horizontalCollision){
-			if(tile.getX() > o.position.x + o.getSprite().getSpriteWidth() - 2){ //right
-				o.position.x = tile.getX() - o.getSprite().getSpriteWidth();
+			if(minX > o.position.x + o.getSprite().getSpriteWidth() - 2){ //right
+				o.position.x = minX - o.getSprite().getSpriteWidth();
 			}else{ //left
-				o.position.x = tile.getX() + tile.getWidth();
+				o.position.x = maxX;
 			}
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void update(Observable entity, Object... metadata) {
 //		float velocityX = (float)metadata[0];

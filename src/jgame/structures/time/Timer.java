@@ -3,10 +3,9 @@ import java.util.TimerTask;
 
 import jgame.Behavior;
 /**
- * This class represents a timer that as millisecond precision
+ * This class represents a timer that as millisecond precision and executed certain tasks
  * @author David Almeida
  * @since 1.0
- * @see jgame.structures.time.Timer
  */
 public abstract class Timer{
 	protected long milliseconds;
@@ -16,7 +15,7 @@ public abstract class Timer{
 		
 	/**
 	 * 
-	 * @param mili the milliseconds of the task
+	 * @param milli the milliseconds of the task
 	 * @param task the task to execute
 	 * @since 1.0
 	 */
@@ -28,7 +27,7 @@ public abstract class Timer{
 	
 	/**
 	 * 
-	 * @param mili the milliseconds of the task
+	 * @param milli the milliseconds of the task
 	 * @param task the task to execute
 	 * @param taskOnTimerEnd the task to execute when the timer ends
 	 * @since 1.0
@@ -46,13 +45,17 @@ public abstract class Timer{
 	
 	/**
 	 * 
-	 * @return true if the timer is over, that is, has passed exactly {@value milliseconds} milliseconds
+	 * @return true if the timer is over
 	 * @since 1.0
 	 */
 	public final boolean isTaskOver(){
 		return milliseconds <= 0;
 	}
 	
+	/**
+	 * Stops the timer
+	 * @since 1.0
+	 */
 	public final void stop(){
 		task.cancel();
 		timer.cancel();
@@ -71,6 +74,7 @@ public abstract class Timer{
 	
 	/**
 	 * @return the task that the timer is executing
+	 * @since 1.0
 	 */
 	public final Behavior getTimerExecutionTask() {
 		return timerExecutionTask;
@@ -78,6 +82,7 @@ public abstract class Timer{
 
 	/**
 	 * @return the task that the timer will execute when it ends
+	 * @since 1.0
 	 */
 	public  final Behavior getOnTimerEndTask() {
 		return onTimerEndTask;

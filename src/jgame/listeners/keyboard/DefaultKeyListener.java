@@ -1,8 +1,6 @@
 package jgame.listeners.keyboard;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import jgame.entity.Camera;
-import jgame.entity.GameObject;
 /**
  * This class represents adds a level of indirection between the keyboard and the window 
  * @author David Almeida
@@ -21,18 +19,26 @@ class DefaultKeyListener implements KeyListener{
 	public DefaultKeyListener(Keyboard k){
 		keyboard = k;
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public synchronized void keyPressed(KeyEvent event) {
-		//keyboard.executeBehavior(event.getKeyCode());
 		keyboard.press(event.getKeyCode());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public synchronized void keyReleased(KeyEvent event) {
 		keyboard.release(event.getKeyCode());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void keyTyped(KeyEvent event) {}
 	

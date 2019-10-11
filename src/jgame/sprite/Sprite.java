@@ -26,7 +26,6 @@ public class Sprite{
 	 * 
 	 * @param spritePath the path of sprite
 	 * @param quantity the quantity of images in the sprite
-	 * @required quantity > 0
 	 * @since 1.0
 	 */
 	public Sprite(String spritePath, int quantity){
@@ -63,9 +62,9 @@ public class Sprite{
 	 * 
 	 * @param start, the start of the sprite animation
 	 * @param end, the end of the sprite animation
+	 * @param time the duration of the animation in milliseconds
 	 * <p>
 	 * start is inclusive and end is exclusive
-	 * @ensures sequence != null
 	 * @since 1.0 
 	 */
 	public void setSequence(int start, int end,long time){
@@ -91,14 +90,14 @@ public class Sprite{
 	 * 
 	 * @param start the start of the sprite animation
 	 * @param end the end of the sprite animation
+	 * @param time the duration of the animation in milliseconds
 	 * @param a the audio to be played during the animation of the sequence
 	 * <p>
 	 * start is inclusive and end is exclusive
-	 * @ensures sequence != null
 	 * @since 1.0 
 	 */
 	public void setSequence(int start, int end,long time, Audio a){
-		//animation.setAnimationAudio(a);
+		animation.setAnimationAudio(a);
 		this.setSequence(start, end, time);
 	}
 
@@ -107,7 +106,6 @@ public class Sprite{
 	/**
 	 * 
 	 * @return the current sprite sequence
-	 * @requires sequence != null
 	 * @see setSequence
 	 * @since 1.0
 	 */
@@ -147,6 +145,7 @@ public class Sprite{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((animation == null) ? 0 : animation.hashCode());
 		result = prime * result + ((image == null) ? 0 : image.hashCode());
 		result = prime * result + Arrays.hashCode(sequence);
 		result = prime * result + Arrays.hashCode(sprite);
@@ -167,6 +166,11 @@ public class Sprite{
 		if (getClass() != obj.getClass())
 			return false;
 		Sprite other = (Sprite) obj;
+		if (animation == null) {
+			if (other.animation != null)
+				return false;
+		} else if (!animation.equals(other.animation))
+			return false;
 		if (image == null) {
 			if (other.image != null)
 				return false;

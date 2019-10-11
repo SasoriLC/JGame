@@ -5,6 +5,17 @@ import java.util.Map;
 
 import jgame.Behavior;
 
+/**
+ * This class represents a keyboard. A keyboard as its own listener that specifies what should be 
+ * done when a certain action occurs, for example a button is clicked.
+ * <br>
+ * Note that it is highly recommended to not change the keyboard's listener(it has a default one).
+ * If the keyboard's listener is not implemented carefully it can cause some issues such as input delay,
+ * non expected behaviors, etc
+ * A keyboard should be added to the main window in order to actually behave as expected.
+ * @author David Almeida 
+ * @since 1.0
+ */
 public class Keyboard {
 
 	private Map<Integer,Behavior> keyPressedBehaviors = new HashMap<>();
@@ -16,6 +27,7 @@ public class Keyboard {
 	/**
 	 * 
 	 * @param mutipleKeys true if the keyboard should read multiple inputs
+	 * @since 1.0
 	 */
     public Keyboard(boolean mutipleKeys){
     	inputManager = new KeyboardInputManager(this);
@@ -24,8 +36,8 @@ public class Keyboard {
 
 	/**
 	 * 
-	 * @param keyCode
-	 * @param behavior - the behavior to execute when the key is pressed/clicked
+	 * @param keyCode the key code of the key
+	 * @param behavior the behavior to execute when the key is pressed/clicked
 	 * @since 1.0
 	 */
 	public void addPressBehavior(int keyCode, Behavior behavior){
@@ -34,8 +46,8 @@ public class Keyboard {
 	
 	/**
 	 * 
-	 * @param keyCode
-	 * @param behavior - the behavior to execute when the key is released
+	 * @param keyCode the key code of the key
+	 * @param behavior the behavior to execute when the key is released
 	 * @since 1.0
 	 */
 	public void addReleaseBehavior(int keyCode, Behavior behavior){
@@ -64,16 +76,27 @@ public class Keyboard {
 		return keyReleasedBehaviors.get(keyCode);
 	}
 	
-	public void press(int keyCode){
+	/**
+	 * Notifies the input manager that a certain key was pressed
+	 * @param keyCode the key code of the pressed key
+	 * @since 1.0
+	 */
+	void press(int keyCode){
 		inputManager.keyPressed(keyCode);
 	}
 	
-	public void release(int keyCode){
+	/**
+	 * Notifies the input manager that a certain key was released
+	 * @param keyCode the key code of the released key
+	 * @since 1.0
+	 */
+	void release(int keyCode){
 		inputManager.keyReleased(keyCode);
 	}
 	
 	/**
 	 * @return true if the keyboard supports multiple inputs mutipleKeys
+	 * @since 1.0
 	 */
 	public boolean supportsMutipleKeys() {
 		return mutipleKeys;
@@ -82,13 +105,17 @@ public class Keyboard {
 	
 	/**
 	 * @return the key listener
+	 * @since 1.0
 	 */
 	public KeyListener getKeyListener() {
 		return listener;
 	}
 
 	/**
+	 * It is highly recommended to not change the keyboard's listener. Only do it if it is 
+	 * absolutely necessary.
 	 * @param listener the key listener to set
+	 * @since 1.0
 	 */
 	public void setKeyListener(KeyListener listener) {
 		this.listener = listener;

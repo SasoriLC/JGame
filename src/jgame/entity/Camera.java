@@ -11,7 +11,7 @@ import jgame.tile.Tile;
  * <br>
  * A camera must have a game object to follow
  * <br>
- * The camera only will show things that within it's range (width, height)
+ * The camera will only show things that are within its range (width, height)
  * @author David Almeida
  * @since 1.0
  */
@@ -48,6 +48,7 @@ public class Camera extends Entity{
 	 * @param height the height of the camera
 	 * @param initialX the initial x position of the camera
 	 * @param initialY the initial y position of the camera
+	 * @return the camera
 	 * @since 1.0
 	 */
 	public static Camera create(GameObject target, int width, int height,

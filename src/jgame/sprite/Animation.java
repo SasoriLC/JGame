@@ -2,9 +2,6 @@ package jgame.sprite;
 
 import jgame.Audio;
 import jgame.entity.Observable;
-import jgame.structures.time.InfiniteTimer;
-import jgame.structures.time.PeriodicTimer;
-import jgame.structures.time.Timer;
 /**
  * This class is responsible for changing the indexes of the sprite's sequence 
  * in order to make it an animation
@@ -18,19 +15,18 @@ public class Animation extends Observable{
 	private boolean isRunning;
 	private boolean loop;
 	private long lastTImeExecuted;
-	//	private Timer timer;
 	private Audio audio;
 	private long time;
 	//in order to distinct different animations every animation needs an id
-	private int id;
-	private static int numberOfAnimations; 
+	private long id;
+	private static long numberOfAnimations; 
 
 	/**
 	 * Creates a new animation
 	 * @loop true if the animation is supposed to loop
 	 * @since 1.0
 	 */
-	public Animation (boolean loop){
+	Animation (boolean loop){
 		this.loop = loop;
 		id = numberOfAnimations++;
 	}
@@ -48,18 +44,23 @@ public class Animation extends Observable{
 	 * @return the current index of the animation
 	 * @since 1.0
 	 */
-	public int getCurrentAnimationIndex(){
+	int getCurrentAnimationIndex(){
 		if(currentIndex == maxIndex){
 			stop();
 		}
 		return currentIndex;
 	}
 
+	/**
+	 * Stops the animation
+	 * @since 1.0
+	 */
 	public void stop(){
 		currentIndex = 0;
 		isRunning = false;
+		if(audio != null)
+			audio.stop();
 		this.notifyObservers();
-		//		timer.stop();
 	}
 
 	/**
@@ -71,19 +72,17 @@ public class Animation extends Observable{
 	 * Starts the animation
 	 * @since 1.0
 	 */
-	public void startNewAnimation(int maxIndex,long time){
+	void startNewAnimation(int maxIndex,long time){
 		if(!isRunning){
-			//			System.out.println("NEW ANIMATION");
 			isRunning = true;
 			this.maxIndex = maxIndex;
 			this.time = time;
 			Animator.getInstance().addAnimation(this);
+			
+			//the audio should be played when the animation begins 
+			if(audio != null)
+				audio.play();
 		}
-		//		if(loop)
-		//			timer = new InfiniteTimer(time, () -> play(maxIndex));
-		//		else
-		//			timer = new PeriodicTimer(time * maxIndex,time, () -> play(maxIndex));
-		//		timer.start();
 	}
 
 	/**
@@ -92,17 +91,15 @@ public class Animation extends Observable{
 	 * Plays the animation if it is necessary
 	 * @since 1.0
 	 */
-	public void play(){
-		if(lastTImeExecuted == 0 || System.currentTimeMillis() - lastTImeExecuted >= time){
-			if(audio != null)
-				audio.play();
+	void play(){
+		if(lastTImeExecuted == 0 || System.currentTimeMillis() - lastTImeExecuted >= time/maxIndex){
 			currentIndex++;
 			if(currentIndex == this.maxIndex && !loop){
 				currentIndex = 0;
 				isRunning = false;
 				if(audio != null)
 					audio.stop();
-				//timer.stop();
+				
 				this.notifyObservers();
 			}else if(currentIndex==this.maxIndex){
 				currentIndex = 0;
@@ -114,15 +111,17 @@ public class Animation extends Observable{
 	/**
 	 * Sets an audio to be played alongside with the animation
 	 * @param audio The audio
+	 * @since 1.0
 	 */
 	public final void setAnimationAudio(Audio audio){
-		this.audio = audio;
+		//this.audio = audio;
 	}
 
 	/**
 	 * @return the maxIndex
+	 * @since 1.0
 	 */
-	public int getMaxIndex() {
+	int getMaxIndex() {
 		return maxIndex;
 	}
 

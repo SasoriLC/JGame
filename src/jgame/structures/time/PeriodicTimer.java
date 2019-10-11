@@ -4,21 +4,32 @@ import java.util.TimerTask;
 
 import jgame.Behavior;
 
+/**
+ * This timer executes a certain tasks after a certain millisecond interval
+ * @author David Almeida
+ * @see jgame.structures.time.Timer
+ * @since 1.0
+ */
 public class PeriodicTimer extends Timer{
 
 	private long timeBetweenTasks;
 	
 	/**
-	 * {@inheritDoc}
-	 * @param timerBetweenTasks the time between two successive tasks in milliseconds
+	 * @param milli the milliseconds of the task
+	 * @param timeBetweenTasks the time between two successive tasks in milliseconds
+	 * @param task the task to execute
+	 * @since 1.0
 	 */
 	public PeriodicTimer(long milli,long timeBetweenTasks, Behavior task) {
 		this(milli,timeBetweenTasks,task,null);
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 * @param timerBetweenTasks the time between two successive tasks in milliseconds
+ 	 * @param milli the milliseconds of the task
+ 	 * @param timeBetweenTasks the time between two successive tasks in milliseconds
+	 * @param task the task to execute
+	 * @param taskOnTimerEnd the task to execute when the timer ends
+	 * @since 1.0
 	 */
 	public PeriodicTimer(long milli,long timeBetweenTasks, Behavior task, Behavior taskOnTimerEnd){
 		super(milli,task,taskOnTimerEnd);

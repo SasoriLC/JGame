@@ -4,11 +4,22 @@ import jgame.entity.Observable;
 import jgame.entity.Observer;
 import jgame.structures.time.InfiniteTimer;
 
+/**
+ * This class is responsible for handling mutiple animations in a single thread 
+ * (implemented with a timer)
+ * @author David Almeida
+ * @since 1.0
+ */
 class AnimationsThread implements Observer{
 	private int currentThreadAnimations;
 	private ArrayList<Animation> animations;
 
 
+	/**
+	 * Creates a timer that will execute animations every 50 milliseconds. Note that the animations 
+	 * are only played when necessary
+	 * @since 1.0
+	 */
 	AnimationsThread(){
 		animations = new ArrayList<>();
 		
@@ -16,6 +27,7 @@ class AnimationsThread implements Observer{
 				() -> {
 					synchronized(animations){
 						//to prevent concurrent modifications
+						@SuppressWarnings("unchecked")
 						ArrayList<Animation> anims = (ArrayList<Animation>)animations.clone();
 						for(Animation a: anims)
 							a.play();
@@ -24,7 +36,11 @@ class AnimationsThread implements Observer{
 	}
 
 	
-	
+	/**
+	 * Adds an animation to this thread to execute
+	 * @param animation the animation to add
+	 * @since 1.0
+	 */
 	void addAnimation(Animation animation){
 		synchronized(animations){
 			animations.add(animation);
@@ -34,6 +50,7 @@ class AnimationsThread implements Observer{
 
 	/**
 	 * @return the current number of animations that this thread has 
+	 * @since 1.0
 	 */
 	public int getCurrentThreadAnimations() {
 		return currentThreadAnimations;

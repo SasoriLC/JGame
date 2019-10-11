@@ -1,6 +1,6 @@
 package jgame.sprite;
 /**
- * TODO
+ * This sprite represents a sprite that is going to be animated forever
  * @author David Almeida
  * @see jgame.sprite.Animation
  * @see jgame.sprite.Sprite

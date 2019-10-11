@@ -19,7 +19,9 @@ public class GameObject extends Entity{
 	private Sprite sprite;
 	private float xD; //x direction
 	private float yD; //y direction
-
+	private int layer;
+	private boolean collidable;
+	private String name;
 
 	/**
 	 * 
@@ -31,19 +33,71 @@ public class GameObject extends Entity{
 		this.sprite = sprite;
 	}
 
-
 	/**
 	 * 
 	 * @param sprite the sprite representing the game object
 	 * @param x the initial x of the game object
 	 * @param y the initial y of the game object
+	 * @param layer the layer of the game object. An game object will overlap any game object 
+	 * that has a lower layer
 	 * @since 1.0
 	 */
-	public GameObject(Sprite sprite, int x, int y) {
+	public GameObject(Sprite sprite, int x, int y,int layer) {
 		this(sprite);
 		position = new Point2D(x,y);
+		this.layer = layer;
 	}
 
+
+	/**
+	 * @return the layer
+	 * @since 1.0
+	 */
+	public int getLayer() {
+		return layer;
+	}
+
+
+	/**
+	 * @param layer the layer to set
+	 * @since 1.0
+	 */
+	public void setLayer(int layer) {
+		this.layer = layer;
+	}
+
+	/**
+	 * @return true if the game object is collidable
+	 * @since 1.0
+	 */
+	public boolean isCollidable() {
+		return collidable;
+	}
+
+	/**
+	 * @param collidable true if the game object should be collidable
+	 * @since 1.0
+	 */
+	public void setCollidableness(boolean collidable) {
+		this.collidable = collidable;
+	}
+	
+	/**
+	 * @return the name
+	 * @since 1.0
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 * @since 1.0
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 
 	/**
 	 * Draws the game object in the scene
@@ -135,7 +189,7 @@ public class GameObject extends Entity{
 
 		return(position.x + getSprite().getSpriteWidth() >= minX 
 				&& position.x <= maxX)
-				|| (position.y  + getSprite().getSpriteHeight() >= minY 
+				&& (position.y  + getSprite().getSpriteHeight() >= minY 
 				&& position.y <= maxY);
 	}
 
@@ -155,7 +209,7 @@ public class GameObject extends Entity{
 
 	/**
 	 * 
-	 * @param go
+	 * @param go the game object
 	 * @return true if the game object collided with the given game object
 	 * @since 1.0
 	 */
@@ -174,6 +228,9 @@ public class GameObject extends Entity{
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result + (collidable ? 1231 : 1237);
+		result = prime * result + layer;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((sprite == null) ? 0 : sprite.hashCode());
 		result = prime * result + Float.floatToIntBits(xD);
 		result = prime * result + Float.floatToIntBits(yD);
@@ -193,6 +250,15 @@ public class GameObject extends Entity{
 		if (getClass() != obj.getClass())
 			return false;
 		GameObject other = (GameObject) obj;
+		if (collidable != other.collidable)
+			return false;
+		if (layer != other.layer)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
 		if (sprite == null) {
 			if (other.sprite != null)
 				return false;

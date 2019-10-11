@@ -16,7 +16,6 @@ public class Pair<E,V>{
 	 * 
 	 * @param e the first element
 	 * @param v the second element
-	 * @requires e to be of the same type of the first generic type
 	 * <br>
 	 * v to be of the same type of the second generic type
 	 * @since 1.0

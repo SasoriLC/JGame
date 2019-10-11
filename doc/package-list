@@ -1,8 +1,10 @@
 jgame
-jgame.component
 jgame.entity
 jgame.exceptions
+jgame.listeners.keyboard
+jgame.listeners.mouse
 jgame.sprite
 jgame.structures
+jgame.structures.time
 jgame.tile
 test

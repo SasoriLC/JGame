@@ -1,15 +1,24 @@
 package jgame;
-
 import java.io.File;
-import java.util.function.Consumer;
-
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
+/**
+ * This class is responsible for playing audio. 
+ * The audio file can be in any recognizable format. 
+ * @author David Almeida
+ * @since 1.0
+ */
 public class Audio{
 
 	private BasicPlayer player;
 	private Thread t;
+	
+	/**
+	 * Creates an audio source to play audio in any format
+	 * @param path the path of the audio file
+	 * @since 1.0
+	 */
 	public Audio(String path){
 		player = new BasicPlayer();
 		try {
@@ -22,6 +31,7 @@ public class Audio{
 
 	/**
 	 * Starts the given audio
+	 * @since 1.0
 	 */
 	public void play(){
 		startThread(() -> {
@@ -35,6 +45,7 @@ public class Audio{
 
 	/**
 	 * Resumes the given audio
+	 * @since 1.0
 	 */
 	public void resume(){
 		startThread(() -> {
@@ -48,6 +59,7 @@ public class Audio{
 
 	/**
 	 * Pauses the given audio
+	 * @since 1.0
 	 */
 	public void pause(){
 		startThread(() -> {
@@ -61,6 +73,7 @@ public class Audio{
 
 	/**
 	 * Stops the given audio
+	 * @since 1.0
 	 */
 	public void stop(){
 		startThread(() -> {
@@ -75,6 +88,7 @@ public class Audio{
 	/**
 	 * Starts a new thread that executes a function which is implemented by @function
 	 * @param function The function to execute
+	 * @since 1.0
 	 */
 	private void startThread(Behavior function){
 		if(t != null){
