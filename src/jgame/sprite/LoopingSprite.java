@@ -1,4 +1,7 @@
 package jgame.sprite;
+
+import jgame.exceptions.SpriteDoesNotExistException;
+
 /**
  * This sprite represents a sprite that is going to be animated forever
  * @author David Almeida
@@ -13,9 +16,10 @@ public class LoopingSprite extends Sprite{
 	 * @param spritePath the path of sprite
 	 * @param quantity the quantity of images in the sprite
 	 * @param time the time of a single animation
+	 * @throws SpriteDoesNotExistException if @spritePath is null
 	 * @since 1.0
 	 */
-	public LoopingSprite(String spritePath, int quantity,long time) {
+	public LoopingSprite(String spritePath, int quantity,long time) throws SpriteDoesNotExistException{
 		super(spritePath, quantity);
 		this.setSequence(0, quantity, time);
 		animation = new Animation(true);

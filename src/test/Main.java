@@ -4,12 +4,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+
 import jgame.Audio;
 import jgame.GameObjectCollisionDetector;
 import jgame.Scene;
 import jgame.Window;
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
+import jgame.exceptions.SpriteException;
 import jgame.listeners.keyboard.Keyboard;
 import jgame.listeners.mouse.Mouse;
 import jgame.sprite.LoopingSprite;
@@ -20,20 +22,20 @@ public class Main {
 
 	private static float velocity = 1.5f;
 	private static final String MAP = "cave.scn";
-	private static final String PLAYER = "Sprites/sprite.png";
+	private static final String PLAYER = "Sprites/greenman.png";
 	private static long time = 400;
 	private static Scene scene;
 	private static Window window;
 
 	private static GameObject player;
-	private static GameObject follower = new GameObject(new Sprite("Sprites/test.png",4),100,450,1);
+	private static GameObject follower;
 
 	public static void main(String[] args) throws Exception{
 		//GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = 800;//gd.getDisplayMode().getWidth();
 		int height = 600;//gd.getDisplayMode().getHeight();
 
-		Sprite s = new Sprite(PLAYER,16);
+		Sprite s = new Sprite(PLAYER,48);
 		player = new GameObject(s,750,425,4);
 		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
@@ -41,6 +43,8 @@ public class Main {
 		scene = new Scene(MAP);
 		scene.addGameObject(player); //me
 		player.addObserver(new GameObjectCollisionDetector());
+		
+		follower = new GameObject(new Sprite("Sprites/test.png",4),100,450,1);
 		follower.getSprite().setSequence(0, 1, 9999);
 		follower.setCollidableness(true);
 		//follower.addObserver(new GameObjectCollisionDetector());
@@ -69,26 +73,46 @@ public class Main {
 		//create the keyboard behaviors
 		k.addPressBehavior(KeyEvent.VK_UP, () -> { 
 			player.moveY(-velocity);
-			player.getSprite().setSequence(12,16, time,a);
-//			follower.position.moveTowards(player.position, 1000);
+			try {
+				player.getSprite().setSequence(36,48, time,a);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//			follower.position.moveTowards(player.position, 1000);
 
 		});
 		k.addPressBehavior(KeyEvent.VK_DOWN,() -> {
 			player.moveY(velocity);
-			player.getSprite().setSequence(0, 4, time,a);
-//			follower.position.moveTowards(player.position, 1000);
+			try {
+				player.getSprite().setSequence(24, 36, time,a);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addPressBehavior(KeyEvent.VK_LEFT, () -> {
 			player.moveX(-velocity);
-			player.getSprite().setSequence(4,8, time,a);
-//			follower.position.moveTowards(player.position, 1000);
+			try {
+				player.getSprite().setSequence(12,24, time,a);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addPressBehavior(KeyEvent.VK_RIGHT, () -> {
 			player.moveX(velocity);
-			player.getSprite().setSequence(8,12, time,a);
-//			follower.position.moveTowards(player.position, 1000);
+			try {
+				player.getSprite().setSequence(0,12, time,a);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//			follower.position.moveTowards(player.position, 1000);
 		});
-		
+
 		//release
 		k.addReleaseBehavior(KeyEvent.VK_UP, () -> { 
 			player.moveY(0);
@@ -110,7 +134,7 @@ public class Main {
 			player.moveY(0);
 			player.getSprite().getAnimation().stop();
 		});
-		
+
 		window.setKeyboard(k);
 
 		Mouse m = new Mouse();
@@ -140,7 +164,7 @@ public class Main {
 
 		run();
 	}
-	
+
 	private static void run(){
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
@@ -168,34 +192,36 @@ public class Main {
 
 	private static void addObjects(){
 		int time = 1200;
-		GameObject torch = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,370,0);
-		scene.addGameObject(torch);
+		try{
+			GameObject torch = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,370,0);
+			scene.addGameObject(torch);
 
-		GameObject torch1 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,370,0);
-		scene.addGameObject(torch1);
+			GameObject torch1 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,370,0);
+			scene.addGameObject(torch1);
 
-		GameObject torch2 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,420,0);
-		scene.addGameObject(torch2);
+			GameObject torch2 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,420,0);
+			scene.addGameObject(torch2);
 
-		GameObject torch3 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,470,0);
-		scene.addGameObject(torch3);
+			GameObject torch3 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,470,0);
+			scene.addGameObject(torch3);
 
-		GameObject torch4 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,520,0);
-		scene.addGameObject(torch4);
+			GameObject torch4 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,520,0);
+			scene.addGameObject(torch4);
 
-		GameObject torch5 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,570,0);
-		scene.addGameObject(torch5);
+			GameObject torch5 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),575,570,0);
+			scene.addGameObject(torch5);
 
-		GameObject torch6 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,420,0);
-		scene.addGameObject(torch6);
+			GameObject torch6 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,420,0);
+			scene.addGameObject(torch6);
 
-		GameObject torch7 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,470,0);
-		scene.addGameObject(torch7);
+			GameObject torch7 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,470,0);
+			scene.addGameObject(torch7);
 
-		GameObject torch8 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,520,0);
-		scene.addGameObject(torch8);
+			GameObject torch8 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,520,0);
+			scene.addGameObject(torch8);
 
-		GameObject torch9 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,570,0);
-		scene.addGameObject(torch9);
+			GameObject torch9 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,570,0);
+			scene.addGameObject(torch9);
+		}catch (SpriteException e) {}
 	}
 }

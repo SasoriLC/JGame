@@ -1,4 +1,5 @@
 package jgame.sprite;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 import jgame.Audio;
+import jgame.exceptions.SpriteDoesNotExistException;
 import jgame.exceptions.SpriteSequenceInvalid;
 
 /**
@@ -21,14 +23,21 @@ public class Sprite{
 	protected BufferedImage[] sprite,sequence;
 	protected Animation animation;
 	protected int spriteWidth,spriteHeight;
-
+	
+	/**
+	 * Creates an empty sprite. A null sprite is useful for empty game objects that wrap others.
+	 * @since 1.0
+	 */
+	public Sprite(){}
+	
 	/**
 	 * 
 	 * @param spritePath the path of sprite
 	 * @param quantity the quantity of images in the sprite
+	 * @throws SpriteDoesNotExistException if @spritePath is null
 	 * @since 1.0
 	 */
-	public Sprite(String spritePath, int quantity){
+	public Sprite(String spritePath, int quantity) throws SpriteDoesNotExistException{
 		sprite = new BufferedImage[quantity];
 		animation = new Animation(false);
 		try {
@@ -48,11 +57,12 @@ public class Sprite{
 	}
 	
 	/**
-	 * 
+	 * Creates a sprite with only one image
 	 * @param spritePath the path of sprite
+	 * @throws SpriteDoesNotExistException if @spritePath is null
 	 * @since 1.0
 	 */
-	public Sprite(String spritePath){
+	public Sprite(String spritePath) throws SpriteDoesNotExistException{
 		this(spritePath,1);
 		setSequence(0,1,1);
 	}
@@ -65,9 +75,13 @@ public class Sprite{
 	 * @param time the duration of the animation in milliseconds
 	 * <p>
 	 * start is inclusive and end is exclusive
+	 * @throws SpriteDoesNotExistException if the sprite is null
 	 * @since 1.0 
 	 */
-	public void setSequence(int start, int end,long time){
+	public void setSequence(int start, int end,long time) throws SpriteDoesNotExistException{
+		if(sprite == null)
+			throw new SpriteDoesNotExistException();
+		
 		try{
 			if(start < 0 || start > sprite.length-1 || end < start)
 				throw new SpriteSequenceInvalid();
@@ -94,14 +108,13 @@ public class Sprite{
 	 * @param a the audio to be played during the animation of the sequence
 	 * <p>
 	 * start is inclusive and end is exclusive
+	 * @throws SpriteDoesNotExistException if the sprite is null
 	 * @since 1.0 
 	 */
-	public void setSequence(int start, int end,long time, Audio a){
+	public void setSequence(int start, int end,long time, Audio a) throws SpriteDoesNotExistException{
 		animation.setAnimationAudio(a);
 		this.setSequence(start, end, time);
 	}
-
-	
 
 	/**
 	 * 
@@ -136,6 +149,24 @@ public class Sprite{
 	 */
 	public Animation getAnimation() {
 		return animation;
+	}
+	
+	/**
+	 * Sets a new size for the sprite
+	 * @param width the new width
+	 * @param height the new height
+	 * @since 1.0
+	 */
+	public void setSpriteSize(int width,int height){
+		spriteWidth = width;
+		spriteHeight = height;
+		if(image != null){
+			spriteWidth /= sprite.length;
+			image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+			for(int i = 0; i < sprite.length; i++)
+				sprite[i] = image.getSubimage(i * spriteWidth, 0
+						,spriteWidth , spriteHeight); 
+		}
 	}
 
 	/* (non-Javadoc)
