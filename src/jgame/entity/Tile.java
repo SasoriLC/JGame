@@ -1,19 +1,18 @@
-package jgame.tile;
+package jgame.entity;
 import java.awt.image.BufferedImage;
 /**
  * This class represents a tile.
  * <br>
- * A tile is composed by it's image, it's number and it's type.
+ * A tile is composed by it's image and it's number. It is also an entity
  * <br>
  * In a scene each tile with a different image as a different number
  * @author David Almeida
  * @since 1.0
+ * @version 1.0
  */
-public class Tile implements Cloneable{
-	private int number,scnX,scnY;
+public class Tile extends Entity implements Cloneable{
+	private int number;
 	private BufferedImage tile;
-	private TileType type;
-	
 	
 	/**
 	 * 
@@ -25,25 +24,11 @@ public class Tile implements Cloneable{
 	 */
 	public Tile(BufferedImage image, int number,int x,int y){
 		this.number = number;
-		this.scnX = x;
-		this.scnY = y;
+		position.x = x;
+		position.y = y;
 		tile = image;
 	}
-	
-	/**
-	 * 
-	 * @param image the image representing the tile
-	 * @param number the number of the tile
-	 * @param x the x of the tile in the scene
-	 * @param y the y of the tile in the scene
-	 * @param type the tile's type
-	 * @since 1.0
-	 */
-	public Tile(BufferedImage image, int number,int x,int y,TileType type){
-		this(image,number,x,y);
-		this.type = type;
-	}
-	
+		
 	/**
 	 * 
 	 * @return the image that represents the tile
@@ -82,20 +67,11 @@ public class Tile implements Cloneable{
 	
 	/**
 	 * 
-	 * @return the x of the tile in the scn file
-	 * @since 1.0
-	 */
-	public int getTileScnX(){
-		return scnX;
-	}
-	
-	/**
-	 * 
 	 * @return the x of the tile
 	 * @since 1.0
 	 */
 	public int getX(){
-		return getTileScnX() * getWidth();
+		return (int)position.x * getWidth();
 	}
 	
 	/**
@@ -104,37 +80,9 @@ public class Tile implements Cloneable{
 	 * @since 1.0
 	 */
 	public int getY(){
-		return getTileScnY() * getHeight();
+		return (int)position.y * getHeight();
 	}
-	
-	/**
-	 * 
-	 * @return the y of the tile in the scn file
-	 * @since 1.0
-	 */
-	public int getTileScnY(){
-		return scnY;
-	}
-	
-	/**
-	 * 
-	 * @param newType the tile's type
-	 * @since 1.0
-	 * @see TileType
-	 */
-	public void setTileType(TileType newType){
-		this.type = newType;
-	}
-	
-	/**
-	 * 
-	 * @return the tile's type
-	 * @since 1.0
-	 */
-	public TileType getTileType(){
-		return type;
-	}
-	
+		
 	/**
 	 * 
 	 * @return a clone of this object

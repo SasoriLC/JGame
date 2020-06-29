@@ -32,7 +32,7 @@ public class Mouse{
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		BufferedImage image = ImageIO.read(new File(path));
 		Cursor newCursor = toolkit.createCustomCursor(image, 
-				new Point(image.getWidth(), image.getHeight()), cursorName);
+				new Point(20, 20), cursorName);
 		Window.getInstance().setCursor(newCursor);
 	}
 	

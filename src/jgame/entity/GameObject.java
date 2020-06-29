@@ -4,9 +4,8 @@ import java.awt.Graphics;
 
 import jgame.Scene;
 import jgame.Window;
+import jgame.components.BoxCollider;
 import jgame.sprite.Sprite;
-import jgame.structures.Point2D;
-import jgame.tile.Tile;
 
 /**
  * This class represents a game object.
@@ -17,11 +16,9 @@ import jgame.tile.Tile;
 public class GameObject extends Entity{
 
 	private Sprite sprite;
-	private float xD; //x direction
-	private float yD; //y direction
 	private int layer;
-	private boolean collidable;
 	private String name;
+	private float xD,yD;
 
 	/**
 	 * 
@@ -38,13 +35,14 @@ public class GameObject extends Entity{
 	 * @param sprite the sprite representing the game object
 	 * @param x the initial x of the game object
 	 * @param y the initial y of the game object
-	 * @param layer the layer of the game object. An game object will overlap any game object 
+	 * @param layer the layer of the game object. A game object will overlap any game object 
 	 * that has a lower layer
 	 * @since 1.0
 	 */
 	public GameObject(Sprite sprite, int x, int y,int layer) {
 		this(sprite);
-		position = new Point2D(x,y);
+		position.x = x;
+		position.y = y;
 		this.layer = layer;
 	}
 
@@ -65,22 +63,6 @@ public class GameObject extends Entity{
 	public void setLayer(int layer) {
 		this.layer = layer;
 	}
-
-	/**
-	 * @return true if the game object is collidable
-	 * @since 1.0
-	 */
-	public boolean isCollidable() {
-		return collidable;
-	}
-
-	/**
-	 * @param collidable true if the game object should be collidable
-	 * @since 1.0
-	 */
-	public void setCollidableness(boolean collidable) {
-		this.collidable = collidable;
-	}
 	
 	/**
 	 * @return the name
@@ -96,6 +78,25 @@ public class GameObject extends Entity{
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+
+
+	/**
+	 * @param moves the x-axis
+	 * @since 1.0
+	 */
+	public void moveX(float x) {
+		this.xD = x;
+	}
+	
+
+	/**
+	 * @param moves the x-axis
+	 * @since 1.0
+	 */
+	public void moveY(float y) {
+		this.yD = y;
 	}
 	
 
@@ -119,7 +120,12 @@ public class GameObject extends Entity{
 	 * @since 1.0
 	 */
 	private void move(){
-		//this.notifyObservers(xD,yD);
+		//update components to update their position based on the game object 
+		//new position
+//		this.notifyObservers((int)position.x,(int)position.y
+//				,(int)(position.x + sprite.getSpriteWidth())
+//				,(int)(position.y + sprite.getSpriteHeight())); 
+		this.notifyObservers((int)xD,(int)yD);
 		this.notifyObservers();
 		Scene scene = Window.getInstance().getScene();
 		
@@ -135,30 +141,6 @@ public class GameObject extends Entity{
 			position.y = 0;
 		else if(position.y > scene.getHeight() - sprite.getSpriteHeight())
 			position.y = scene.getHeight() - sprite.getSpriteHeight();
-	}
-
-	/**
-	 * @param velocity the velocity of the movement
-	 * <p>
-	 * This is used to move the game object around the x-axis
-	 * @since 1.0
-	 */
-	public void moveX(float velocity) {
-//		if(xD == 0)
-		xD = velocity;
-//		position.x += xD > 0 ? 1 : -1;
-//		System.out.println("xD: " + xD + " position.x: " + position.x);
-//		xD += xD > 0 ? -1 : 1;
-	}
-
-	/**
-	 * @param velocity the velocity of the movement
-	 * <p>
-	 * This is used to move the game object around the y-axis
-	 * @since 1.0
-	 */
-	public void moveY(float velocity) {
-		yD = velocity;
 	}
 
 
@@ -200,26 +182,16 @@ public class GameObject extends Entity{
 	 * @return true if the game object collided with the given tile
 	 * @since 1.0
 	 */
-	public boolean collided(Tile tile){		
-		return isWithinRectangle(tile.getX()
-				,tile.getY(),
-				tile.getX() + tile.getWidth(),
-				tile.getY() + tile.getHeight());
+	public boolean collided(Entity entity){
+		if(entity.hasComponent("BoxCollider")){
+			BoxCollider collider = (BoxCollider) entity.getComponent("BoxCollider");
+			return isWithinRectangle(collider.getxMin()
+					,collider.getyMin(),
+					collider.getxMax(),
+					collider.getyMax());
+		}
+		return false;
 	}
-
-	/**
-	 * 
-	 * @param go the game object
-	 * @return true if the game object collided with the given game object
-	 * @since 1.0
-	 */
-	public boolean collided(GameObject go){
-		return isWithinRectangle(go.position.x
-				,go.position.y,
-				go.position.x + go.getSprite().getSpriteWidth(),
-				go.position.y + go.getSprite().getSpriteHeight());
-	}
-
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -228,7 +200,6 @@ public class GameObject extends Entity{
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + (collidable ? 1231 : 1237);
 		result = prime * result + layer;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((sprite == null) ? 0 : sprite.hashCode());
@@ -250,8 +221,6 @@ public class GameObject extends Entity{
 		if (getClass() != obj.getClass())
 			return false;
 		GameObject other = (GameObject) obj;
-		if (collidable != other.collidable)
-			return false;
 		if (layer != other.layer)
 			return false;
 		if (name == null) {
@@ -270,5 +239,4 @@ public class GameObject extends Entity{
 			return false;
 		return true;
 	}
-
 }

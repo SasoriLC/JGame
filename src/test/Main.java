@@ -4,20 +4,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
 import jgame.Audio;
-import jgame.GameObjectCollisionDetector;
 import jgame.Scene;
 import jgame.Window;
+import jgame.components.BoxCollider;
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
+import jgame.entity.Tile;
 import jgame.exceptions.SpriteException;
 import jgame.listeners.keyboard.Keyboard;
 import jgame.listeners.mouse.Mouse;
 import jgame.sprite.LoopingSprite;
 import jgame.sprite.Sprite;
-import jgame.tile.Tile;
-import jgame.tile.TileType;
 public class Main {
 
 	private static float velocity = 1.5f;
@@ -36,27 +34,23 @@ public class Main {
 		int height = 600;//gd.getDisplayMode().getHeight();
 
 		Sprite s = new Sprite(PLAYER,48);
-		player = new GameObject(s,750,425,4);
+		player = new GameObject(s,710,440,4);
 		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
-
+		player.addComponent(new BoxCollider(player));
 		scene = new Scene(MAP);
 		scene.addGameObject(player); //me
-		player.addObserver(new GameObjectCollisionDetector());
 		
 		follower = new GameObject(new Sprite("Sprites/test.png",4),100,450,1);
 		follower.getSprite().setSequence(0, 1, 9999);
-		follower.setCollidableness(true);
-		//follower.addObserver(new GameObjectCollisionDetector());
-
+		
 		//add collisions. Note that this only will work correctly in the following maps: cave and Collision test scene
 		ArrayList<ArrayList<Tile>> tiles = scene.getTiles();
 		for(ArrayList<Tile> row: tiles){
 			for(Tile tile: row){
-				if(tile.getTileNumber() == 2) 
-					tile.setTileType(TileType.WALL);
-				else 
-					tile.setTileType(TileType.NORMAL);
+				if(tile.getTileNumber() == 2){
+					tile.addComponent(new BoxCollider(tile));
+				}
 			}
 		}
 
@@ -70,13 +64,13 @@ public class Main {
 
 
 		Audio a = new Audio("Sounds/grass.mp3");
+
 		//create the keyboard behaviors
 		k.addPressBehavior(KeyEvent.VK_UP, () -> { 
 			player.moveY(-velocity);
 			try {
 				player.getSprite().setSequence(36,48, time,a);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			//			follower.position.moveTowards(player.position, 1000);
@@ -87,7 +81,6 @@ public class Main {
 			try {
 				player.getSprite().setSequence(24, 36, time,a);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			//			follower.position.moveTowards(player.position, 1000);
@@ -97,7 +90,6 @@ public class Main {
 			try {
 				player.getSprite().setSequence(12,24, time,a);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			//			follower.position.moveTowards(player.position, 1000);
@@ -107,7 +99,6 @@ public class Main {
 			try {
 				player.getSprite().setSequence(0,12, time,a);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			//			follower.position.moveTowards(player.position, 1000);
@@ -157,7 +148,7 @@ public class Main {
 			public void mouseReleased(MouseEvent e) {}
 
 		});
-		m.setMouseCursor("Castle/Dark brown.png", "troll");
+		//m.setMouseCursor("images.png", "troll");
 		window.setMouse(m);
 
 		scene.addGameObject(follower);

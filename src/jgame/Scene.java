@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+
+import jgame.components.BoxCollider;
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
+import jgame.entity.Tile;
 import jgame.exceptions.TileNotFoundException;
-import jgame.tile.Tile;
 
 /**
  * This class represents a Map.
@@ -29,7 +32,7 @@ import jgame.tile.Tile;
  * @since 1.0
  * @see jgame.entity.GameObject
  * @see jgame.OrderedLayerSet
- * @see jgame.tile.Tile
+ * @see jgame.entity.Tile
  */
 @SuppressWarnings("serial")
 public class Scene extends JComponent{
@@ -162,7 +165,9 @@ public class Scene extends JComponent{
 				Tile tile = tiles.get(y).get(x);
 				g.drawImage(tile.getImage(), x * tile.getWidth() - (int)camera.position.x
 						,y * tile.getHeight() - (int) camera.position.y,null);
-
+				if(tile.hasComponent("BoxCollider")){
+					drawBoxCollider(g,(BoxCollider) tile.getComponent("BoxCollider"));
+				}
 			}
 		}
 
@@ -175,12 +180,26 @@ public class Scene extends JComponent{
 					&& gO.position.y + gO.getSprite().getSpriteWidth() >= camera.position.y
 					&& gO.position.y <= camera.position.y + camera.getHeight()){
 				visibleGameObjects.add(gO);
+				if(gO.hasComponent("BoxCollider")){
+					drawBoxCollider(g,(BoxCollider) gO.getComponent("BoxCollider"));
+				}
 				gO.draw(g);
 			}
-			
 		}
 	}
 	
+	private void drawBoxCollider(Graphics g, BoxCollider collider){
+		Camera camera = Camera.getInstance();
+		//top
+		g.drawLine(collider.getxMin() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y, collider.getxMax() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y);
+		//right
+		g.drawLine(collider.getxMax() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y, collider.getxMax() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y);
+		//bottom
+		g.drawLine(collider.getxMin() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y, collider.getxMax() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y);
+		//left
+		g.drawLine(collider.getxMin() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y, collider.getxMin() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y);
+	}
+		
 	/**
 	 * 
 	 * @return the all the game objects that are currently being shown on the scene
@@ -225,6 +244,7 @@ public class Scene extends JComponent{
 			for(int x  = minX; x < maxX; x++){
 				if(y < this.tiles.size() && x < this.tiles.get(0).size())
 					tiles.add(this.tiles.get(y).get(x));
+				
 			}
 		}
 		return tiles;

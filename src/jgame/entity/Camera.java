@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import jgame.Scene;
 import jgame.structures.Point2D;
-import jgame.tile.Tile;
 
 /**
  * This class represents a camera.
@@ -37,7 +36,8 @@ public class Camera extends Entity{
 		this.target = target;
 		this.width = width;
 		this.height = height;
-		position = new Point2D(initialX,initialY);
+		position.x = initialX;
+		position.y = initialY;
 		INSTANCE = this;
 	}
 	
