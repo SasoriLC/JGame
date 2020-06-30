@@ -1,5 +1,6 @@
 package jgame;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -160,6 +161,7 @@ public class Scene extends JComponent{
 		int yMax = Math.min(tiles.size(), 
 				(int)camera.position.y + (camera.getHeight() / aux.getHeight()) + 1);
 
+		g.setColor(Color.RED);
 		for(int y = yMin; y < yMax; y++){
 			for(int x = xMin; x < xMax; x++){
 				Tile tile = tiles.get(y).get(x);
@@ -181,6 +183,7 @@ public class Scene extends JComponent{
 					&& gO.position.y <= camera.position.y + camera.getHeight()){
 				visibleGameObjects.add(gO);
 				if(gO.hasComponent("BoxCollider")){
+					g.setColor(Color.GREEN);
 					drawBoxCollider(g,(BoxCollider) gO.getComponent("BoxCollider"));
 				}
 				gO.draw(g);
@@ -191,13 +194,13 @@ public class Scene extends JComponent{
 	private void drawBoxCollider(Graphics g, BoxCollider collider){
 		Camera camera = Camera.getInstance();
 		//top
-		g.drawLine(collider.getxMin() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y, collider.getxMax() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y);
+		g.drawLine((int)collider.minPoint.x - (int)camera.position.x, (int)collider.minPoint.y - (int)camera.position.y, (int)collider.maxPoint.x  - (int)camera.position.x, (int)collider.minPoint.y - (int)camera.position.y);
 		//right
-		g.drawLine(collider.getxMax() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y, collider.getxMax() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y);
+		g.drawLine((int)collider.maxPoint.x - (int)camera.position.x, (int)collider.minPoint.y - (int)camera.position.y, (int)collider.maxPoint.x  - (int)camera.position.x, (int)collider.maxPoint.y - (int)camera.position.y);
 		//bottom
-		g.drawLine(collider.getxMin() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y, collider.getxMax() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y);
+		g.drawLine((int)collider.minPoint.x - (int)camera.position.x, (int)collider.maxPoint.y - (int)camera.position.y, (int)collider.maxPoint.x  - (int)camera.position.x, (int)collider.maxPoint.y - (int)camera.position.y);
 		//left
-		g.drawLine(collider.getxMin() - (int)camera.position.x, collider.getyMin() - (int)camera.position.y, collider.getxMin() - (int)camera.position.x, collider.getyMax() - (int)camera.position.y);
+		g.drawLine((int)collider.minPoint.x - (int)camera.position.x, (int)collider.minPoint.y - (int)camera.position.y,(int) collider.minPoint.x - (int)camera.position.x, (int)collider.maxPoint.y - (int)camera.position.y);
 	}
 		
 	/**
@@ -224,20 +227,14 @@ public class Scene extends JComponent{
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param gO the target
-	 * @return the tiles where the game object is currently in
-	 * @since 1.0
-	 */
-	public List<Tile> getGameObjectCurrentTiles(GameObject gO){
+	public List<Tile> getTilesIn(float xMin, float yMin, float xMax, float yMax){
 		Tile aux = tiles.get(0).get(0);
 
-		int minX = (int) gO.position.x/ aux.getWidth();
-		int maxX = (int) ((gO.position.x + gO.getSprite().getSpriteWidth()) / aux.getWidth()) + 1;
+		int minX = (int) xMin/ aux.getWidth();
+		int maxX = (int) ((xMax) / aux.getWidth()) + 1;
 
-		int minY = (int) gO.position.y / aux.getHeight();
-		int maxY = (int) ((gO.position.y+ gO.getSprite().getSpriteHeight()) / aux.getHeight()) + 1;
+		int minY = (int) yMin / aux.getHeight();
+		int maxY = (int) ((yMax) / aux.getHeight()) + 1;
 
 		List<Tile> tiles = new ArrayList<>();
 		for(int y = minY; y < maxY; y++){
@@ -248,5 +245,16 @@ public class Scene extends JComponent{
 			}
 		}
 		return tiles;
+	}
+	
+	/**
+	 * 
+	 * @param gO the target
+	 * @return the tiles where the game object is currently in
+	 * @since 1.0
+	 */
+	public List<Tile> getGameObjectCurrentTiles(GameObject gO){
+		return getTilesIn(gO.position.x,gO.position.x + gO.getSprite().getSpriteWidth()
+					,gO.position.y,gO.position.y+ gO.getSprite().getSpriteHeight());
 	}
 }

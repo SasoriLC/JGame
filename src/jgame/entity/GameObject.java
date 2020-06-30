@@ -1,5 +1,6 @@
 package jgame.entity;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import jgame.Scene;
@@ -28,6 +29,7 @@ public class GameObject extends Entity{
 	public GameObject(Sprite sprite) {
 		super();
 		this.sprite = sprite;
+		name = "GameObject";
 	}
 
 	/**
@@ -108,11 +110,21 @@ public class GameObject extends Entity{
 	public void draw(Graphics g){
 		move();
 		Camera camera = Camera.getInstance();
-
+		g.setColor(Color.WHITE);
 		if(sprite != null)
 			g.drawImage(sprite.getNextSpriteSequence(),
 					(int) (position.x - camera.position.x)
 					,(int) (position.y - camera.position.y), null);
+		if(name.equals("player")) {
+			g.drawString("Player " + position.x + " " + position.y  + " " 
+					+ (position.x + getSprite().getSpriteWidth()) + " "
+					+ (position.y + getSprite().getSpriteHeight()),0,50);
+			BoxCollider c = (BoxCollider) this.getComponent("BoxCollider");
+
+			g.drawString("Box Collider " + c.minPoint.x+ " " + c.minPoint.x + " " + 
+						c.maxPoint.x + " " + c.maxPoint.y ,0,100);
+
+		}
 	}
 
 	/**
@@ -121,12 +133,13 @@ public class GameObject extends Entity{
 	 */
 	private void move(){
 		//update components to update their position based on the game object 
-		//new position
-//		this.notifyObservers((int)position.x,(int)position.y
-//				,(int)(position.x + sprite.getSpriteWidth())
-//				,(int)(position.y + sprite.getSpriteHeight())); 
-		this.notifyObservers((int)xD,(int)yD);
 		this.notifyObservers();
+		BoxCollider c = (BoxCollider) this.getComponent("BoxCollider");
+		if(c != null) {
+			this.notifyObservers(xD,yD);
+
+		}
+
 		Scene scene = Window.getInstance().getScene();
 		
 		position.x += xD;
@@ -151,46 +164,6 @@ public class GameObject extends Entity{
 	 */
 	public Sprite getSprite(){
 		return sprite;
-	}
-
-
-	/**
-	 * 
-	 * @param minX the starting x point of the rectangle
-	 * @param minY the starting y point of the rectangle
-	 * @param maxX the ending x point of the rectangle
-	 * @param maxY the ending y point of the rectangle
-	 * @return true if the game object is within the given rectangle
-	 * @since 1.0
-	 */
-	private boolean isWithinRectangle(float minX, float minY,float maxX,float maxY){
-		//		player1.x < player2.x + player2.width &&
-		//	    player1.x + player1.width > player2.x &&
-		//	    player1.y < player2.y + player2.height &&
-		//	    player1.y + player1.height > player2.y
-
-		return(position.x + getSprite().getSpriteWidth() >= minX 
-				&& position.x <= maxX)
-				&& (position.y  + getSprite().getSpriteHeight() >= minY 
-				&& position.y <= maxY);
-	}
-
-
-	/**
-	 * 
-	 * @param tile the tile to check
-	 * @return true if the game object collided with the given tile
-	 * @since 1.0
-	 */
-	public boolean collided(Entity entity){
-		if(entity.hasComponent("BoxCollider")){
-			BoxCollider collider = (BoxCollider) entity.getComponent("BoxCollider");
-			return isWithinRectangle(collider.getxMin()
-					,collider.getyMin(),
-					collider.getxMax(),
-					collider.getyMax());
-		}
-		return false;
 	}
 
 	/* (non-Javadoc)

@@ -113,6 +113,10 @@ public class Point2D {
 		return distance(p1.x,p1.y,p2.x,p2.y);
 	}
 
+	@Override
+	public String toString() {
+		return "x: " + x + " y:" + y;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

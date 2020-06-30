@@ -34,10 +34,11 @@ public class Main {
 		int height = 600;//gd.getDisplayMode().getHeight();
 
 		Sprite s = new Sprite(PLAYER,48);
-		player = new GameObject(s,710,440,4);
+		player = new GameObject(s,750,440,4);
 		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
 		player.addComponent(new BoxCollider(player));
+		player.setName("player");
 		scene = new Scene(MAP);
 		scene.addGameObject(player); //me
 		
