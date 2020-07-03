@@ -67,6 +67,14 @@ public class GameObject extends Entity{
 	}
 	
 	/**
+	 * @param newSprite the sprite to set
+	 * @since 1.0
+	 */
+	public void setSprite(Sprite newSprite) {
+		this.sprite = newSprite;
+	}
+	
+	/**
 	 * @return the name
 	 * @since 1.0
 	 */
