@@ -23,6 +23,7 @@ public class Sprite{
 	protected BufferedImage[] sprite,sequence;
 	protected Animation animation;
 	protected int spriteWidth,spriteHeight;
+	private int numberOfImages;
 	
 	/**
 	 * Creates an empty sprite. A null sprite is useful for empty game objects that wrap others.
@@ -35,34 +36,43 @@ public class Sprite{
 	 * @param spritePath the path of sprite
 	 * @param quantity the quantity of images in the sprite
 	 * @throws SpriteDoesNotExistException if @spritePath is null
+	 * @throws IOException 
 	 * @since 1.0
 	 */
-	public Sprite(String spritePath, int quantity) throws SpriteDoesNotExistException{
+	public Sprite(String spritePath, int quantity) throws SpriteDoesNotExistException, IOException{
+		this(ImageIO.read(new File(spritePath)),quantity);
+	}
+	
+	/**
+	 * 
+	 * @param img the image of sprite
+	 * @param quantity the quantity of images in the sprite
+	 * @throws SpriteDoesNotExistException if @spritePath is null
+	 * @since 1.1
+	 */
+	public Sprite(BufferedImage img, int quantity) throws SpriteDoesNotExistException{
 		sprite = new BufferedImage[quantity];
+		numberOfImages = quantity;
 		animation = new Animation(false);
-		try {
-			image = ImageIO.read(new File(spritePath));
+		image = img;
 
-			spriteWidth = image.getWidth() / quantity;
-			spriteHeight = image.getHeight();
+		spriteWidth = image.getWidth() / quantity;
+		spriteHeight = image.getHeight();
 
-			for(int i = 0; i < sprite.length; i++)
-				sprite[i] = image.getSubimage(i * spriteWidth, 0
-						,spriteWidth , spriteHeight); 
-			setSequence(0,1,1);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		for(int i = 0; i < sprite.length; i++)
+			sprite[i] = image.getSubimage(i * spriteWidth, 0
+					,spriteWidth , spriteHeight); 
+		setSequence(0,1,1);
 	}
 	
 	/**
 	 * Creates a sprite with only one image
 	 * @param spritePath the path of sprite
 	 * @throws SpriteDoesNotExistException if @spritePath is null
+	 * @throws IOException 
 	 * @since 1.0
 	 */
-	public Sprite(String spritePath) throws SpriteDoesNotExistException{
+	public Sprite(String spritePath) throws SpriteDoesNotExistException, IOException{
 		this(spritePath,1);
 		setSequence(0,1,1);
 	}
@@ -102,6 +112,16 @@ public class Sprite{
 	
 	/**
 	 * 
+	 * @param index the index of the sprite
+	 * @return the image corresponding to the given index
+	 * @since 1.1
+	 */
+	public BufferedImage getImageAt(int index) {
+		return sprite[index];
+	}
+	
+	/**
+	 * 
 	 * @param start the start of the sprite animation
 	 * @param end the end of the sprite animation
 	 * @param time the duration of the animation in milliseconds
@@ -126,6 +146,24 @@ public class Sprite{
 		return sequence[animation.getCurrentAnimationIndex()];
 	}
 
+	/**
+	 * 
+	 * @return the sprite's original image
+	 * @since 1.1
+	 */
+	public BufferedImage getFullSpriteImage() {
+		return image;
+	}
+	
+	/**
+	 * 
+	 * @return the total number of images that make the sprite
+	 * @since 1.1
+	 */
+	public int getNumberOfImages() {
+		return numberOfImages;
+	}
+	
 	/**
 	 * 
 	 * @return the width of a single sprite

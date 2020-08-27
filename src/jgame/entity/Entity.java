@@ -14,6 +14,7 @@ import jgame.structures.Point2D;
 public abstract class Entity extends Observable{
 	public Point2D position;
 	private HashMap<String,Component> components;
+	protected String name;
 	
 	
 	/**
@@ -23,6 +24,8 @@ public abstract class Entity extends Observable{
 	protected Entity(){
 		position = new Point2D(0,0);
 		components = new HashMap<>();	
+		name = "Entity";
+
 	}
 	
 	public void addComponent(Component component){
@@ -40,6 +43,22 @@ public abstract class Entity extends Observable{
 	
 	public Component getComponent(String component){
 		return components.get(component);
+	}
+	
+	/**
+	 * @return the name
+	 * @since 1.0
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 * @since 1.0
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 		
 	

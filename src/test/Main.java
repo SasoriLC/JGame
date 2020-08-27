@@ -3,6 +3,7 @@ package test;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import jgame.Audio;
 import jgame.Scene;
@@ -214,6 +215,8 @@ public class Main {
 
 			GameObject torch9 = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,570,0);
 			scene.addGameObject(torch9);
-		}catch (SpriteException e) {}
+		}catch (SpriteException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

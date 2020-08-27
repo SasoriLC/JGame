@@ -2,6 +2,7 @@ package jgame.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Objects;
 
 import jgame.Scene;
 import jgame.Window;
@@ -18,7 +19,6 @@ public class GameObject extends Entity{
 
 	private Sprite sprite;
 	private int layer;
-	private String name;
 	private float xD,yD;
 
 	/**
@@ -29,7 +29,6 @@ public class GameObject extends Entity{
 	public GameObject(Sprite sprite) {
 		super();
 		this.sprite = sprite;
-		name = "GameObject";
 	}
 
 	/**
@@ -73,24 +72,6 @@ public class GameObject extends Entity{
 	public void setSprite(Sprite newSprite) {
 		this.sprite = newSprite;
 	}
-	
-	/**
-	 * @return the name
-	 * @since 1.0
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 * @since 1.0
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-
 
 	/**
 	 * @param moves the x-axis
@@ -174,25 +155,15 @@ public class GameObject extends Entity{
 		return sprite;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + layer;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((sprite == null) ? 0 : sprite.hashCode());
-		result = prime * result + Float.floatToIntBits(xD);
-		result = prime * result + Float.floatToIntBits(yD);
+		result = prime * result + Objects.hash(layer, sprite, xD, yD);
 		return result;
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -202,22 +173,8 @@ public class GameObject extends Entity{
 		if (getClass() != obj.getClass())
 			return false;
 		GameObject other = (GameObject) obj;
-		if (layer != other.layer)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (sprite == null) {
-			if (other.sprite != null)
-				return false;
-		} else if (!sprite.equals(other.sprite))
-			return false;
-		if (Float.floatToIntBits(xD) != Float.floatToIntBits(other.xD))
-			return false;
-		if (Float.floatToIntBits(yD) != Float.floatToIntBits(other.yD))
-			return false;
-		return true;
+		return layer == other.layer && Objects.equals(sprite, other.sprite)
+				&& Float.floatToIntBits(xD) == Float.floatToIntBits(other.xD)
+				&& Float.floatToIntBits(yD) == Float.floatToIntBits(other.yD);
 	}
 }
