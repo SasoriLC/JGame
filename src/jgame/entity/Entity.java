@@ -2,9 +2,11 @@ package jgame.entity;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import jgame.components.Component;
+import jgame.exceptions.InvalidLayerEception;
 import jgame.structures.Point2D;
 /**
  * An entity represents every object, example: Game Object, Camera.
@@ -15,6 +17,7 @@ public abstract class Entity extends Observable{
 	public Point2D position;
 	private HashMap<String,Component> components;
 	protected String name;
+	protected int layer;
 	
 	
 	/**
@@ -60,23 +63,35 @@ public abstract class Entity extends Observable{
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * @param layer the layer to set
+	 * @throws InvalidLayerEception if layer < 0
+	 * @since 1.0
+	 */
+	public void setLayer(int layer) throws InvalidLayerEception{
+		if(layer < 0)
+			throw new InvalidLayerEception();
+		this.layer = layer;
+	}
+	
+	/**
+	 * @return the entity's layer
+	 * @since 1.2
+	 */
+	public int getLayer(){
+		return layer;
+	}
 		
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((components == null) ? 0 : components.hashCode());
-		result = prime * result + ((position == null) ? 0 : position.hashCode());
+		result = prime * result + Objects.hash(components, layer, name, position);
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -86,17 +101,8 @@ public abstract class Entity extends Observable{
 		if (getClass() != obj.getClass())
 			return false;
 		Entity other = (Entity) obj;
-		if (components == null) {
-			if (other.components != null)
-				return false;
-		} else if (!components.equals(other.components))
-			return false;
-		if (position == null) {
-			if (other.position != null)
-				return false;
-		} else if (!position.equals(other.position))
-			return false;
-		return true;
+		return Objects.equals(components, other.components) && layer == other.layer && Objects.equals(name, other.name)
+				&& Objects.equals(position, other.position);
 	}
 
 	

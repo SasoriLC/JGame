@@ -17,6 +17,7 @@ import jgame.components.BoxCollider;
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
 import jgame.entity.Tile;
+import jgame.exceptions.SpriteDoesNotExistException;
 import jgame.exceptions.TileNotFoundException;
 
 /**
@@ -91,6 +92,8 @@ public class Scene extends JComponent{
 		} catch (TileNotFoundException e){
 			e.printStackTrace();
 		} catch (IOException e){
+			e.printStackTrace();
+		} catch (SpriteDoesNotExistException e) {
 			e.printStackTrace();
 		}
 	}

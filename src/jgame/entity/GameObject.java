@@ -18,7 +18,6 @@ import jgame.sprite.Sprite;
 public class GameObject extends Entity{
 
 	private Sprite sprite;
-	private int layer;
 	private float xD,yD;
 
 	/**
@@ -56,15 +55,6 @@ public class GameObject extends Entity{
 		return layer;
 	}
 
-
-	/**
-	 * @param layer the layer to set
-	 * @since 1.0
-	 */
-	public void setLayer(int layer) {
-		this.layer = layer;
-	}
-	
 	/**
 	 * @param newSprite the sprite to set
 	 * @since 1.0
@@ -159,7 +149,7 @@ public class GameObject extends Entity{
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(layer, sprite, xD, yD);
+		result = prime * result + Objects.hash(sprite, xD, yD);
 		return result;
 	}
 
@@ -173,8 +163,7 @@ public class GameObject extends Entity{
 		if (getClass() != obj.getClass())
 			return false;
 		GameObject other = (GameObject) obj;
-		return layer == other.layer && Objects.equals(sprite, other.sprite)
-				&& Float.floatToIntBits(xD) == Float.floatToIntBits(other.xD)
+		return Objects.equals(sprite, other.sprite) && Float.floatToIntBits(xD) == Float.floatToIntBits(other.xD)
 				&& Float.floatToIntBits(yD) == Float.floatToIntBits(other.yD);
 	}
 }

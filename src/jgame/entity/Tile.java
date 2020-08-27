@@ -1,7 +1,11 @@
 package jgame.entity;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
+
+import jgame.exceptions.SpriteDoesNotExistException;
+import jgame.sprite.Sprite;
 /**
- * This class represents a tile.
+ * This class represents a tile. Note that a tile is ALWAYS in layer -1.
  * <br>
  * A tile is composed by it's image and it's number. It is also an entity
  * <br>
@@ -10,9 +14,8 @@ import java.awt.image.BufferedImage;
  * @since 1.0
  * @version 1.0
  */
-public class Tile extends Entity implements Cloneable{
+public class Tile extends GameObject implements Cloneable{
 	private int number;
-	private BufferedImage tile;
 	
 	/**
 	 * 
@@ -20,13 +23,15 @@ public class Tile extends Entity implements Cloneable{
 	 * @param number the number of the tile
 	 * @param x the x of the tile in the scene
 	 * @param y the y of the tile in the scene
+	 * @throws SpriteDoesNotExistException 
 	 * @since 1.0
 	 */
-	public Tile(BufferedImage image, int number,int x,int y){
+	public Tile(BufferedImage image, int number,int x,int y) throws SpriteDoesNotExistException{
+		super(new Sprite(image,1),x,y,-1);
 		this.number = number;
 		position.x = x;
 		position.y = y;
-		tile = image;
+		layer = -1;
 	}
 		
 	/**
@@ -35,7 +40,7 @@ public class Tile extends Entity implements Cloneable{
 	 * @since 1.0
 	 */
 	public BufferedImage getImage(){
-		return tile;
+		return this.getSprite().getFullSpriteImage();
 	}
 	
 	/**
@@ -44,7 +49,7 @@ public class Tile extends Entity implements Cloneable{
 	 * @since 1.0
 	 */
 	public int getWidth(){
-		return tile.getWidth();
+		return 	this.getSprite().getFullSpriteImage().getWidth();
 	}
 	
 	/**
@@ -53,7 +58,7 @@ public class Tile extends Entity implements Cloneable{
 	 * @since 1.0
 	 */
 	public int getHeight(){
-		return tile.getHeight();
+		return this.getSprite().getFullSpriteImage().getHeight();
 	}
 	
 	/**
@@ -98,4 +103,25 @@ public class Tile extends Entity implements Cloneable{
 		}
 		return clone;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(number);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tile other = (Tile) obj;
+		return number == other.number;
+	}
+
 }
