@@ -7,8 +7,8 @@ import jgame.Window;
 import jgame.entity.Entity;
 import jgame.entity.GameObject;
 import jgame.entity.Observable;
-import jgame.entity.Tile;
 import jgame.structures.Point2D;
+import jgame.structures.time.PeriodicTimer;
 
 /**
  * This class is responsible for detecting a collision of an entity.
@@ -35,18 +35,6 @@ public class BoxCollider extends Component{
 		this(o,o.position.x,o.position.y
 				,o.position.x + o.getSprite().getSpriteWidth(),
 				o.position.y + o.getSprite().getSpriteHeight());
-	}
-
-	/**
-	 * If this constructor is used to collider will be cover the whole tile
-	 * @param t the tile of the collider
-	 * @since 1.1
-	 */
-	public BoxCollider(Tile t){
-		this(t,t.position.x * t.getWidth()
-				,t.position.y * t.getHeight()
-				,t.position.x * t.getWidth() + t.getHeight(),
-				t.position.y * t.getHeight() + t.getHeight());
 	}
 
 	/**
@@ -108,8 +96,8 @@ public class BoxCollider extends Component{
 	public boolean collided(Entity entity){
 		if(entity.hasComponent("BoxCollider")){
 			BoxCollider collider = (BoxCollider) entity.getComponent("BoxCollider");
-			return isWithinRectangle(collider.maxPoint.x
-					,collider.maxPoint.y,
+			return isWithinRectangle(collider.minPoint.x
+					,collider.minPoint.y,
 					collider.maxPoint.x,
 					collider.maxPoint.y);
 		}
@@ -119,7 +107,7 @@ public class BoxCollider extends Component{
 	/**
 	 * This method is called when the observable game object moves and detects collision 
 	 * using AABB algorithm
-	 * @param entity - the game object being observed
+	 * @param entity the game object being observed
 	 * @since 1.1
 	 */
 	@Override
@@ -128,24 +116,15 @@ public class BoxCollider extends Component{
 			GameObject o = (GameObject) entity;
 
 			Scene currentScene = Window.getInstance().getScene();
-			List<Tile> tiles = currentScene.getTilesIn(minPoint.x,minPoint.y,maxPoint.x,maxPoint.y);
-			List<GameObject> gos = currentScene.getVisibleGameObjects();
+			List<Entity> entities = currentScene.getVisibleEntities();
 
-			for(Tile tile: tiles){
-				if(tile.hasComponent("BoxCollider")){
-					BoxCollider c = (BoxCollider)tile.getComponent("BoxCollider");
-					if(c.collided(tile)){
+			for(Entity e: entities){
+				if(e.hasComponent("BoxCollider") && !e.equals(o)){
+					BoxCollider c = (BoxCollider)e.getComponent("BoxCollider");
+					if(c.collided(o)){
 						pushGameObjectFrom(o,c.minPoint.x,c.minPoint.y,
 								c.maxPoint.x ,c.maxPoint.y);
 					}
-				}
-			}
-
-			for(GameObject g: gos){
-				if(g.hasComponent("BoxCollider") && !g.equals(o)){
-					BoxCollider c = (BoxCollider)g.getComponent("BoxCollider");
-					pushGameObjectFrom(o	,c.minPoint.x,c.minPoint.y,
-							c.maxPoint.x ,c.maxPoint.y);
 				}
 			}
 		}
@@ -164,32 +143,33 @@ public class BoxCollider extends Component{
 		minPoint = new Point2D(lastMinPoint.x, lastMinPoint.y);
 		maxPoint = new Point2D(lastMaxPoint.x, lastMaxPoint.y);
 		entity.position = new Point2D(lastEntityPoint.x,lastEntityPoint.y);
-		//		BoxCollider c = (BoxCollider) o.getComponent("BoxCollider");
-		//		boolean verticalCollision = !(maxX <= o.position.x)
-		//				&& !(o.position.x + o.getSprite().getSpriteWidth() <= minX);
-		//
-		//		if(verticalCollision){
-		//			if(maxY - 2 < o.position.y ){
-		//				o.position.y = maxY;
-		//			}else if(minY > o.position.y + o.getSprite().getSpriteHeight() - 2){
-		//				o.position.y = minY - o.getSprite().getSpriteHeight();
-		//			}
-		//		}
-		//
-		//
-		//		boolean horizontalCollision = (!(maxY <= o.position.y))
-		//				&& !(o.position.y + o.getSprite().getSpriteHeight() <= minY);
-		//
-		//		if(horizontalCollision){
-		//			if(minX > o.position.x + o.getSprite().getSpriteWidth() - 2){ //right
-		//				o.position.x = minX - o.getSprite().getSpriteWidth();
-		//			}else{ //left
-		//				o.position.x = maxX;
-		//			}
-		//		}
+		boolean verticalCollision = !(maxX <= o.position.x)
+				&& !(o.position.x + o.getSprite().getSpriteWidth() <= minX);
+
+		if(verticalCollision){
+			if(maxY - 2 < o.position.y ){
+				o.position.y = maxY;
+			}else if(minY > o.position.y + o.getSprite().getSpriteHeight() - 2){
+				o.position.y = minY - o.getSprite().getSpriteHeight();
+			}
+		}
+
+
+		boolean horizontalCollision = (!(maxY <= o.position.y))
+				&& !(o.position.y + o.getSprite().getSpriteHeight() <= minY);
+
+		if(horizontalCollision){
+			if(minX > o.position.x + o.getSprite().getSpriteWidth() - 2){ //right
+				o.position.x = minX - o.getSprite().getSpriteWidth();
+			}else{ //left
+				o.position.x = maxX;
+			}
+		}
 	}
 
 	/**
+	 * Moves the box collider accordingly
+	 * <br>
 	 * {@inheritDoc}
 	 */
 	@Override

@@ -3,7 +3,7 @@ package jgame.entity;
  * This class represents an observer object.
  * <br>
  * An observer object is responsible for handling an event that has occurred in the observable 
- * object.
+ * object. An observer must override hashCode method.
  * @author David Almeida
  * @see jgame.entity.Observable
  * @since 1.0

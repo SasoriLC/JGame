@@ -34,7 +34,7 @@ public abstract class Observable{
 	}
 	
 	/**
-	 * Adds an observer
+	 * Adds an observer. Note that an observer must override hashCode method
 	 * @param observer - the observer to add
 	 * @since 1.0
 	 */
@@ -42,6 +42,15 @@ public abstract class Observable{
 		this.observers.add(observer);
 	}
 
+	/**
+	 * Removes an observer. Note that an observer must override hashCode method
+	 * @param observer - the observer to remove
+	 * @since 1.2
+	 */
+	public final void removeObserver(Observer observer){
+		this.observers.remove(observer);
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

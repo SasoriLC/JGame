@@ -2,7 +2,6 @@ package jgame.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Objects;
 
 import jgame.Scene;
 import jgame.Window;
@@ -70,7 +69,7 @@ public class GameObject extends Entity{
 	public void moveX(float x) {
 		this.xD = x;
 	}
-	
+
 
 	/**
 	 * @param moves the x-axis
@@ -79,7 +78,7 @@ public class GameObject extends Entity{
 	public void moveY(float y) {
 		this.yD = y;
 	}
-	
+
 
 	/**
 	 * Draws the game object in the scene
@@ -87,7 +86,8 @@ public class GameObject extends Entity{
 	 * @since 1.0
 	 */
 	public void draw(Graphics g){
-		move();
+		if(xD != 0 || yD != 0)
+			move();
 		Camera camera = Camera.getInstance();
 		g.setColor(Color.WHITE);
 		if(sprite != null)
@@ -101,7 +101,7 @@ public class GameObject extends Entity{
 			BoxCollider c = (BoxCollider) this.getComponent("BoxCollider");
 
 			g.drawString("Box Collider " + c.minPoint.x+ " " + c.minPoint.x + " " + 
-						c.maxPoint.x + " " + c.maxPoint.y ,0,100);
+					c.maxPoint.x + " " + c.maxPoint.y ,0,100);
 
 		}
 	}
@@ -112,6 +112,7 @@ public class GameObject extends Entity{
 	 */
 	private void move(){
 		//update components to update their position based on the game object 
+
 		this.notifyObservers();
 		BoxCollider c = (BoxCollider) this.getComponent("BoxCollider");
 		if(c != null) {
@@ -120,7 +121,7 @@ public class GameObject extends Entity{
 		}
 
 		Scene scene = Window.getInstance().getScene();
-		
+
 		position.x += xD;
 		if(position.x < 0)
 			position.x = 0;
@@ -133,6 +134,7 @@ public class GameObject extends Entity{
 			position.y = 0;
 		else if(position.y > scene.getHeight() - sprite.getSpriteHeight())
 			position.y = scene.getHeight() - sprite.getSpriteHeight();
+
 	}
 
 
@@ -143,27 +145,5 @@ public class GameObject extends Entity{
 	 */
 	public Sprite getSprite(){
 		return sprite;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(sprite, xD, yD);
-		return result;
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GameObject other = (GameObject) obj;
-		return Objects.equals(sprite, other.sprite) && Float.floatToIntBits(xD) == Float.floatToIntBits(other.xD)
-				&& Float.floatToIntBits(yD) == Float.floatToIntBits(other.yD);
 	}
 }

@@ -12,6 +12,7 @@ import jgame.components.BoxCollider;
 import jgame.entity.Camera;
 import jgame.entity.GameObject;
 import jgame.entity.Tile;
+import jgame.exceptions.EntityIsAlreadyInSceneException;
 import jgame.exceptions.SpriteException;
 import jgame.listeners.keyboard.Keyboard;
 import jgame.listeners.mouse.Mouse;
@@ -35,7 +36,7 @@ public class Main {
 		int height = 600;//gd.getDisplayMode().getHeight();
 
 		Sprite s = new Sprite(PLAYER,48);
-		player = new GameObject(s,750,440,4);
+		player = new GameObject(s,950,440,4);
 		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
 		player.addComponent(new BoxCollider(player));
@@ -69,6 +70,7 @@ public class Main {
 
 		//create the keyboard behaviors
 		k.addPressBehavior(KeyEvent.VK_UP, () -> { 
+			System.out.println(player.position);
 			player.moveY(-velocity);
 			try {
 				player.getSprite().setSequence(36,48, time,a);
@@ -183,7 +185,7 @@ public class Main {
 		}
 	}
 
-	private static void addObjects(){
+	private static void addObjects() throws EntityIsAlreadyInSceneException{
 		int time = 1200;
 		try{
 			GameObject torch = new GameObject(new LoopingSprite("Sprites/torch.png",9,time),725,370,0);

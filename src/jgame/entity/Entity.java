@@ -4,16 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import jgame.components.Component;
 import jgame.exceptions.InvalidLayerEception;
 import jgame.structures.Point2D;
 /**
- * An entity represents every object, example: Game Object, Camera.
+ * An entity represents every object, example: Game Object, Camera. Every entity has its own unique id.
  * @author David Almeida
  * @since 1.0
  */
-public abstract class Entity extends Observable{
+public abstract class Entity extends Observable {
+	
+	private static long CURRENT_ID = 0;
+	
+	private long id;
 	public Point2D position;
 	private HashMap<String,Component> components;
 	protected String name;
@@ -25,6 +28,7 @@ public abstract class Entity extends Observable{
 	 * @since 1.0
 	 */
 	protected Entity(){
+		id = CURRENT_ID++;
 		position = new Point2D(0,0);
 		components = new HashMap<>();	
 		name = "Entity";
@@ -82,13 +86,21 @@ public abstract class Entity extends Observable{
 	public int getLayer(){
 		return layer;
 	}
-		
 	
+	/**
+	 * 
+	 * @return the id of the entity
+	 * @since 1.2
+	 */
+	public long getId() {
+		return id;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(components, layer, name, position);
+		result = prime * result + Objects.hash(id);
 		return result;
 	}
 
@@ -101,9 +113,8 @@ public abstract class Entity extends Observable{
 		if (getClass() != obj.getClass())
 			return false;
 		Entity other = (Entity) obj;
-		return Objects.equals(components, other.components) && layer == other.layer && Objects.equals(name, other.name)
-				&& Objects.equals(position, other.position);
+		return id == other.id;
 	}
-
+		
 	
 }

@@ -1,4 +1,5 @@
 package jgame.exceptions;
+
 /**
  * This is a generic exception for all JGame library's exception
  * @author David Almeida

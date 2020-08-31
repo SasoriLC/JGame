@@ -1,7 +1,8 @@
 package jgame;
 
 import java.util.Iterator;
-import jgame.entity.GameObject;
+
+import jgame.entity.Entity;
 /**
  * This is an ordered set (ordered by the layer of the game object) that stores game objects
  * Why is this necessary? Since java overlaps the last graphics that were drawn the game objects 
@@ -9,7 +10,7 @@ import jgame.entity.GameObject;
  * @author David Almeida
  * @since 1.0
  */
-class OrderedLayerSet implements Iterable<GameObject>{
+class OrderedLayerSet implements Iterable<Entity>{
 
 	private Node first;
 	private Node last;
@@ -22,7 +23,7 @@ class OrderedLayerSet implements Iterable<GameObject>{
 	private class Node{
 		private Node next;
 		private Node before;
-		private GameObject value;
+		private Entity value;
 		
 		/**
 		 * Creates a node
@@ -30,7 +31,7 @@ class OrderedLayerSet implements Iterable<GameObject>{
 		 * @param b the previous node
 		 * @param v the value of the node
 		 */
-		private Node(Node n,Node b,GameObject v){
+		private Node(Node n,Node b,Entity v){
 			next = n;
 			before = b;
 			value = v;
@@ -50,7 +51,7 @@ class OrderedLayerSet implements Iterable<GameObject>{
 	 * @param o the game object to add
 	 * @since 1.0
 	 */
-	public void add(GameObject o){
+	public void add(Entity o){
 		if(first == null){
 			first = new Node(null,null,o);
 			last = first;
@@ -92,7 +93,7 @@ class OrderedLayerSet implements Iterable<GameObject>{
 	 * @param o the game object
 	 * @since 1.0
 	 */
-	public void remove(GameObject o){
+	public void remove(Entity o){
 		if(first == null)
 			return;
 		if(first.value.equals(o)){
@@ -122,7 +123,7 @@ class OrderedLayerSet implements Iterable<GameObject>{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Iterator<GameObject> iterator() {
+	public Iterator<Entity> iterator() {
 		return new ListIterator(first);
 	}
 
@@ -131,7 +132,7 @@ class OrderedLayerSet implements Iterable<GameObject>{
 	 * @author David Almeida
 	 * @since 1.0
 	 */
-	private class ListIterator implements Iterator<GameObject>{
+	private class ListIterator implements Iterator<Entity>{
 		
 		private Node current;
 		
@@ -155,7 +156,7 @@ class OrderedLayerSet implements Iterable<GameObject>{
 		 * {@inheritDoc}
 		 */
 		@Override
-		public GameObject next() {
+		public Entity next() {
 			Node aux = current;
 			current = current.next;
 			return aux.value;
