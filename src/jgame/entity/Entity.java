@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import jgame.components.Component;
 import jgame.exceptions.InvalidLayerEception;
 import jgame.structures.Point2D;
@@ -12,7 +13,7 @@ import jgame.structures.Point2D;
  * @author David Almeida
  * @since 1.0
  */
-public abstract class Entity extends Observable {
+public abstract class Entity extends Observable implements Cloneable{
 	
 	private static long CURRENT_ID = 0;
 	
@@ -96,6 +97,26 @@ public abstract class Entity extends Observable {
 		return id;
 	}
 
+	@Override
+	public Object clone() {
+		Entity other = null;
+		try {
+			other = (Entity) super.clone();
+			other.position = new Point2D(this.position.x,this.position.y);
+			other.components = new HashMap<>();
+			other.name = new String(this.name);
+			other.id = CURRENT_ID++;
+			for(String componentName: this.components.keySet()) {
+				other.components.put(componentName, 
+						this.components.get(componentName).copyWithNewEntity(other));			
+
+			}
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return other;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

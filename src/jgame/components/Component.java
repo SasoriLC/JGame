@@ -1,5 +1,6 @@
 package jgame.components;
 
+import jgame.entity.Entity;
 import jgame.entity.Observable;
 import jgame.entity.Observer;
 
@@ -14,5 +15,7 @@ public abstract class Component extends Observable implements Observer{
 	public final String getComponentName(){
 		return componentName;
 	}
-
+	
+	public abstract Component copyWithNewEntity(Entity e);
+	
 }

@@ -13,6 +13,7 @@ import jgame.sprite.Sprite;
  * @author David Almeida
  * @since 1.0
  * @version 1.0
+ * @deprecated
  */
 public class Tile extends GameObject implements Cloneable{
 	private int number;
@@ -96,11 +97,7 @@ public class Tile extends GameObject implements Cloneable{
 	@Override
 	public Object clone(){
 		Tile clone = null;
-		try {
-			clone = (Tile) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		clone = (Tile) super.clone();
 		return clone;
 	}
 	

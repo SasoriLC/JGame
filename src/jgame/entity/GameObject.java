@@ -14,10 +14,11 @@ import jgame.sprite.Sprite;
  * @see jgame.entity.Entity
  * @since 1.0
  */
-public class GameObject extends Entity{
+public class GameObject extends Entity implements Cloneable{
 
 	private Sprite sprite;
 	private float xD,yD;
+	private boolean moveOnceX,moveOnceY;
 
 	/**
 	 * 
@@ -61,21 +62,40 @@ public class GameObject extends Entity{
 	public void setSprite(Sprite newSprite) {
 		this.sprite = newSprite;
 	}
-
+	
 	/**
-	 * @param moves the x-axis
-	 * @since 1.0
+	 * @param move along the x axis
+	 * @since 1.2
 	 */
 	public void moveX(float x) {
+		this.xD = x;
+		moveOnceX = true;
+	}
+	
+	/**
+	 * @param move along the y axis
+	 * @since 1.2
+	 */
+	public void moveY(float y) {
+		this.yD = y;
+		moveOnceY= true;
+	}
+
+
+	/**
+	 * @param moves continuously in the x-axis
+	 * @since 1.0
+	 */
+	public void moveXContinuously(float x) {
 		this.xD = x;
 	}
 
 
 	/**
-	 * @param moves the x-axis
+	 * @param moves continuously in the x-axis
 	 * @since 1.0
 	 */
-	public void moveY(float y) {
+	public void moveYContinuously(float y) {
 		this.yD = y;
 	}
 
@@ -86,8 +106,14 @@ public class GameObject extends Entity{
 	 * @since 1.0
 	 */
 	public void draw(Graphics g){
-		if(xD != 0 || yD != 0)
+		if(xD != 0 || yD != 0) {
 			move();
+			if(moveOnceX)
+				xD = 0;
+			if(moveOnceY)
+				yD = 0;
+			
+		}
 		Camera camera = Camera.getInstance();
 		g.setColor(Color.WHITE);
 		if(sprite != null)
@@ -145,5 +171,29 @@ public class GameObject extends Entity{
 	 */
 	public Sprite getSprite(){
 		return sprite;
+	}
+	
+	@Override
+	public Object clone() {
+		GameObject other = null;
+		other = (GameObject) super.clone();
+		if(this.sprite != null)
+			other.sprite = (Sprite) this.sprite.clone();
+		return other;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((sprite == null) ? 0 : sprite.hashCode());
+		result = prime * result + Float.floatToIntBits(xD);
+		result = prime * result + Float.floatToIntBits(yD);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
 	}
 }

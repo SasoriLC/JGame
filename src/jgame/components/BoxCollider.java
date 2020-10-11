@@ -8,7 +8,6 @@ import jgame.entity.Entity;
 import jgame.entity.GameObject;
 import jgame.entity.Observable;
 import jgame.structures.Point2D;
-import jgame.structures.time.PeriodicTimer;
 
 /**
  * This class is responsible for detecting a collision of an entity.
@@ -16,7 +15,7 @@ import jgame.structures.time.PeriodicTimer;
  * @author David Almeida
  * @since 1.1
  */
-public class BoxCollider extends Component{
+public class BoxCollider extends Component {
 	public Point2D minPoint;
 	public Point2D maxPoint;
 	private Point2D lastMinPoint;
@@ -77,7 +76,7 @@ public class BoxCollider extends Component{
 	 * @param maxX the ending x point of the rectangle
 	 * @param maxY the ending y point of the rectangle
 	 * @return true if the collider is within the given rectangle
-	 * @since 11
+	 * @since 1.1
 	 */
 	private boolean isWithinRectangle(float minX, float minY,float maxX,float maxY){
 		return maxPoint.x >= minX 
@@ -112,7 +111,7 @@ public class BoxCollider extends Component{
 	 */
 	@Override
 	public void update(Observable entity){
-		if(entity instanceof GameObject){
+		if(entity instanceof GameObject && Window.getInstance().getScene().hasLoaded()){
 			GameObject o = (GameObject) entity;
 
 			Scene currentScene = Window.getInstance().getScene();
@@ -143,28 +142,37 @@ public class BoxCollider extends Component{
 		minPoint = new Point2D(lastMinPoint.x, lastMinPoint.y);
 		maxPoint = new Point2D(lastMaxPoint.x, lastMaxPoint.y);
 		entity.position = new Point2D(lastEntityPoint.x,lastEntityPoint.y);
-		boolean verticalCollision = !(maxX <= o.position.x)
-				&& !(o.position.x + o.getSprite().getSpriteWidth() <= minX);
-
-		if(verticalCollision){
-			if(maxY - 2 < o.position.y ){
-				o.position.y = maxY;
-			}else if(minY > o.position.y + o.getSprite().getSpriteHeight() - 2){
-				o.position.y = minY - o.getSprite().getSpriteHeight();
-			}
-		}
-
-
-		boolean horizontalCollision = (!(maxY <= o.position.y))
-				&& !(o.position.y + o.getSprite().getSpriteHeight() <= minY);
-
-		if(horizontalCollision){
-			if(minX > o.position.x + o.getSprite().getSpriteWidth() - 2){ //right
-				o.position.x = minX - o.getSprite().getSpriteWidth();
-			}else{ //left
-				o.position.x = maxX;
-			}
-		}
+		
+//		float oldX = o.position.x;
+//		float oldY = o.position.y;
+//		boolean verticalCollision = !(maxX <= o.position.x)
+//				&& !(o.position.x + o.getSprite().getSpriteWidth() <= minX);
+//
+//		if(verticalCollision){
+//			if(maxY - 2 < o.position.y ){
+//				o.position.y = maxY;
+//			}else if(minY > o.position.y + o.getSprite().getSpriteHeight() - 2){
+//				o.position.y = minY - o.getSprite().getSpriteHeight();
+//			}
+//		}
+//
+//
+//		boolean horizontalCollision = (!(maxY <= o.position.y))
+//				&& !(o.position.y + o.getSprite().getSpriteHeight() <= minY);
+//
+//		if(horizontalCollision){
+//			if(minX > o.position.x + o.getSprite().getSpriteWidth() - 2){ //right
+//				o.position.x = minX - o.getSprite().getSpriteWidth();
+//			}else{ //left
+//				o.position.x = maxX;
+//			}
+//		}
+//		
+//		float difX = o.position.x - oldX;
+//		float difY = o.position.y - oldY;
+		
+//		minPoint = new Point2D(minPoint.x + difX, minPoint.y + difY);
+//		maxPoint = new Point2D(maxPoint.x + difX, maxPoint.y + difY);
 	}
 
 	/**
@@ -183,6 +191,11 @@ public class BoxCollider extends Component{
 			maxPoint.x += (float)metadata[0];
 			maxPoint.y += (float)metadata[1];
 		}
+	}
+
+	@Override
+	public Component copyWithNewEntity(Entity e) {
+		return new BoxCollider(e,minPoint.x,minPoint.y,maxPoint.x,maxPoint.y);	
 	}
 
 }

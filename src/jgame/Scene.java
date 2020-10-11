@@ -52,6 +52,7 @@ public class Scene extends JComponent implements Observer{
 	private Map<Long, Pair<Integer,Integer>> entityChunks; //key: entity's id, value: x and y entity
 	private Map<String, List<Entity>> entities; //key: name, value: game objects with that name
 	private List<Entity> visibleEntities;
+	private boolean loaded;
 	private int width;
 	private int height;
 	
@@ -142,6 +143,15 @@ public class Scene extends JComponent implements Observer{
 	public  ArrayList<ArrayList<Tile>> getTiles(){
 		return tiles;
 	}
+	
+	/**
+	 * 
+	 * @return true if the scene has loaded
+	 * @since 1.2
+	 */
+	public boolean hasLoaded() {
+		return loaded;
+	}
 
 	/**
 	 * 
@@ -178,7 +188,7 @@ public class Scene extends JComponent implements Observer{
 	 * @since 1.0
 	 */
 	public void deleteEntity(Entity e) throws EntityIsNotInSceneException{
-		Pair<Integer,Integer> p = entityChunks.remove(e);
+		Pair<Integer,Integer> p = entityChunks.remove(e.getId());
 		if(p == null)
 			throw new EntityIsNotInSceneException();
 		chunks[p.getE()][p.getV()].remove(e);
@@ -203,29 +213,16 @@ public class Scene extends JComponent implements Observer{
 		//there is no need to draw the elements that are
 		//not within the range of the camera
 
-		int xMin = Math.max(0, (int) camera.position.x /*/ aux.getWidth()*/);
+		int xMin = Math.max(0, (int) camera.position.x);
 
 		//between the limit and the xOffset of the camera plus
-		//the maximum that it can represent on the screen
-		//+1 because of floating point numbers
+		//the maximum that it can show on the screen
 		int xMax = Math.min(width
-				, (int) camera.position.x + (camera.getWidth() /*/ aux.getWidth()*/) + CHUNK_SIZE);
+				, (int) camera.position.x + (camera.getWidth()) + CHUNK_SIZE);
 
-		int yMin = Math.max(0, (int) camera.position.y /*/ aux.getHeight()*/);
+		int yMin = Math.max(0, (int) camera.position.y);
 		int yMax = Math.min(height, 
-				(int)camera.position.y + (camera.getHeight() /*/ aux.getHeight()*/) + CHUNK_SIZE);
-
-//		g.setColor(Color.RED);
-//		for(int y = yMin; y < yMax; y++){
-//			for(int x = xMin; x < xMax; x++){
-//				Tile tile = tiles.get(y).get(x);
-//				g.drawImage(tile.getImage(), x * tile.getWidth() - (int)camera.position.x
-//						,y * tile.getHeight() - (int) camera.position.y,null);
-//				if(tile.hasComponent("BoxCollider")){
-//					drawBoxCollider(g,(BoxCollider) tile.getComponent("BoxCollider"));
-//				}
-//			}
-//		}
+				(int)camera.position.y + (camera.getHeight()) + CHUNK_SIZE);
 
 		//paint the game objects
 		visibleEntities = new ArrayList<>();
@@ -250,14 +247,15 @@ public class Scene extends JComponent implements Observer{
 			if(gO.position.x + gO.getSprite().getSpriteWidth() >= camera.position.x
 					&& gO.position.x <= camera.position.x + camera.getWidth()
 					&& gO.position.y + gO.getSprite().getSpriteWidth() >= camera.position.y
-					&& gO.position.y <= camera.position.y + camera.getHeight()){				
+					&& gO.position.y <= camera.position.y + camera.getHeight()){
 				if(gO.hasComponent("BoxCollider")){
 					g.setColor(Color.GREEN);
 					drawBoxCollider(g,(BoxCollider) gO.getComponent("BoxCollider"));
 				}
 				gO.draw(g);
 			}
-		}				
+		}
+		loaded = true;
 	}
 	
 	private void drawBoxCollider(Graphics g, BoxCollider collider){
@@ -289,12 +287,6 @@ public class Scene extends JComponent implements Observer{
 	 */
 	public List<Entity> getEntitiesByName(String name){
 		return entities.get(name);
-//		List<GameObject> result = new ArrayList<GameObject>();
-//		for(GameObject g: mapGameObjects)
-//			if(g.getName().equals(name))
-//				result.add(g);
-//		
-//		return result;
 	}
 
 	/**

@@ -36,7 +36,7 @@ public class Main {
 		int height = 600;//gd.getDisplayMode().getHeight();
 
 		Sprite s = new Sprite(PLAYER,48);
-		player = new GameObject(s,950,440,4);
+		player = new GameObject(s,350,800,4);
 		Camera.create(player,width,height,0,0);
 		player.getSprite().setSequence(3, 4,1);
 		player.addComponent(new BoxCollider(player));
@@ -46,7 +46,7 @@ public class Main {
 		
 		follower = new GameObject(new Sprite("Sprites/test.png",4),100,450,1);
 		follower.getSprite().setSequence(0, 1, 9999);
-		
+		follower.addComponent(new BoxCollider(follower));
 		//add collisions. Note that this only will work correctly in the following maps: cave and Collision test scene
 		ArrayList<ArrayList<Tile>> tiles = scene.getTiles();
 		for(ArrayList<Tile> row: tiles){
@@ -71,7 +71,7 @@ public class Main {
 		//create the keyboard behaviors
 		k.addPressBehavior(KeyEvent.VK_UP, () -> { 
 			System.out.println(player.position);
-			player.moveY(-velocity);
+			player.moveYContinuously(-velocity);
 			try {
 				player.getSprite().setSequence(36,48, time,a);
 			} catch (Exception e1) {
@@ -81,7 +81,7 @@ public class Main {
 
 		});
 		k.addPressBehavior(KeyEvent.VK_DOWN,() -> {
-			player.moveY(velocity);
+			player.moveYContinuously(velocity);
 			try {
 				player.getSprite().setSequence(24, 36, time,a);
 			} catch (Exception e1) {
@@ -90,7 +90,7 @@ public class Main {
 			//			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addPressBehavior(KeyEvent.VK_LEFT, () -> {
-			player.moveX(-velocity);
+			player.moveXContinuously(-velocity);
 			try {
 				player.getSprite().setSequence(12,24, time,a);
 			} catch (Exception e1) {
@@ -99,7 +99,7 @@ public class Main {
 			//			follower.position.moveTowards(player.position, 1000);
 		});
 		k.addPressBehavior(KeyEvent.VK_RIGHT, () -> {
-			player.moveX(velocity);
+			player.moveXContinuously(velocity);
 			try {
 				player.getSprite().setSequence(0,12, time,a);
 			} catch (Exception e1) {
@@ -110,23 +110,23 @@ public class Main {
 
 		//release
 		k.addReleaseBehavior(KeyEvent.VK_UP, () -> { 
-			player.moveY(0);
-			player.moveX(0);
+			player.moveYContinuously(0);
+			player.moveXContinuously(0);
 			player.getSprite().getAnimation().stop();
 		});
 		k.addReleaseBehavior(KeyEvent.VK_DOWN,() -> {
-			player.moveY(0);
-			player.moveX(0);
+			player.moveYContinuously(0);
+			player.moveXContinuously(0);
 			player.getSprite().getAnimation().stop();
 		});
 		k.addReleaseBehavior(KeyEvent.VK_LEFT, () -> {
-			player.moveX(0);
-			player.moveY(0);
+			player.moveXContinuously(0);
+			player.moveYContinuously(0);
 			player.getSprite().getAnimation().stop();
 		});
 		k.addReleaseBehavior(KeyEvent.VK_RIGHT, () -> {
-			player.moveX(0);
-			player.moveY(0);
+			player.moveXContinuously(0);
+			player.moveYContinuously(0);
 			player.getSprite().getAnimation().stop();
 		});
 
@@ -157,6 +157,11 @@ public class Main {
 
 		scene.addGameObject(follower);
 
+		GameObject follower2 = (GameObject)follower.clone();
+		follower2.moveX(200);
+		follower2.setName("follower2");
+		System.out.println(follower.position.x);
+		scene.addGameObject(follower2);
 		run();
 	}
 

@@ -18,12 +18,13 @@ import jgame.exceptions.SpriteSequenceInvalid;
  * @see jgame.sprite.Animation
  * @since 1.0
  */
-public class Sprite{
+public class Sprite implements Cloneable{
 	protected BufferedImage image;
 	protected BufferedImage[] sprite,sequence;
 	protected Animation animation;
 	protected int spriteWidth,spriteHeight;
 	private int numberOfImages;
+
 	
 	/**
 	 * Creates an empty sprite. A null sprite is useful for empty game objects that wrap others.
@@ -254,5 +255,15 @@ public class Sprite{
 		if (spriteWidth != other.spriteWidth)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public Object clone(){
+		try {
+			return new Sprite(this.image,this.numberOfImages);
+		} catch (SpriteDoesNotExistException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
